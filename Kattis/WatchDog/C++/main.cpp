@@ -16,15 +16,14 @@ int main()
     uint N;
     // Input
     cin >> N;
-    for(int caseNb = 1; caseNb <= N; ++caseNb) {
+    for(uint caseNb = 1; caseNb <= N; ++caseNb) {
         uint S, H;
         uint minX, maxX, minY, maxY;
         vector<pair<uint, uint>> hatches;
-        bool found = false;
         pair<uint, uint> leashPos;
 
         cin >> S >> H;
-        for(int hatchNb = 1; hatchNb <= H; ++hatchNb) {
+        for(uint hatchNb = 1; hatchNb <= H; ++hatchNb) {
             uint X, Y;
             cin >> X >> Y;
             hatches.push_back(make_pair(X, Y));
@@ -40,7 +39,6 @@ int main()
             result += "poodle\n";
         }
     }
-
     // Output
     cout << result << endl;
 
@@ -50,14 +48,14 @@ int main()
 void reduce_examination_range(vector<pair<uint, uint>> hatches, uint S, uint* minX, uint* maxX, uint* minY, uint* maxY)
 {
     uint tmpMinX, tmpMaxX, tmpMinY, tmpMaxY;
+
     *minX = 0;
     *maxX = S;
     *minY = 0;
     *maxY = S;
     for(auto hatch : hatches) {
-        uint X, Y;
-        X = hatch.first;
-        Y = hatch.second;
+        uint X = hatch.first;
+        uint Y = hatch.second;
 
         tmpMinX = X / 2;
         tmpMaxX = (X + S) / 2;
@@ -75,7 +73,6 @@ pair<uint, uint> find_leash_position(vector<pair<uint, uint>> hatches, uint S, u
 {
     uint X, Y;
 
-    bool found = false;
     for(X = minX; X <= maxX; ++X) {
         for(Y = minY; Y <= maxY; Y++) {
             if(are_all_hatches_in_range(hatches, S, X, Y)) {
