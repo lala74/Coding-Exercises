@@ -4,6 +4,6 @@ Link
 
 ## Problem
 
-**Input**
+**Input**  
 
-**Output**
+**Output**  
