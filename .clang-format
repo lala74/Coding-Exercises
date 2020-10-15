@@ -7,7 +7,7 @@ AllowShortFunctionsOnASingleLine: Inline
 BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBraces: Linux
-ColumnLimit: 120
+ColumnLimit: 150
 IndentWidth: 4
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: Inner
