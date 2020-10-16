@@ -35,9 +35,3 @@ For each test case, output one line containing the coordinates X, Y at which to 
 poodle
 2 2
 ```
-
-
-1
-10 2
-6 6
-5 4
