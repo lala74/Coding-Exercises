@@ -14,5 +14,5 @@ This is a repository for coding exercises
 
 ```bash
 g++ -Wall -Werror -std=c++11 -O2 main.cpp -o main
-./
+./main
 ```
