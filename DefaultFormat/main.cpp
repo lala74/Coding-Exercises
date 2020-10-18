@@ -13,7 +13,7 @@ int main()
     // Main
 
     // Output
-    cout << result;
+    cout << result << endl;
 
     return 0;
 }
