@@ -13,6 +13,7 @@ languages=(
 
 websites=(
     "Kattis"
+    "Divers"
 )
 
 red="\e[41m"
@@ -29,7 +30,7 @@ readmeFileName="README.md"
 function print_usage() {
     echo -e "${red}${bold}${1}${reset}"
     echo "Usage:                                                     #"
-    echo "      create_folder Kattis <problemName> C|C++|Python      #"
+    echo "      create_folder Kattis|Divers <problemName> C|C++|Python      #"
     exit 1
 }
 
