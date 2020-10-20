@@ -67,16 +67,12 @@ void Life::update()
             char* cellStatus = &grid[r][c];
             uint liveCellNeighbor = count_grid[r][c];
 
-            if(*cellStatus == live) {
-                if((liveCellNeighbor == 2) || (liveCellNeighbor == 3)) {
-                    continue;  // next generation
-                } else {
-                    *cellStatus = dead;  // underpopulation or overpopulation
-                }
+            if(liveCellNeighbor == 2) {
+                continue;
+            } else if (liveCellNeighbor == 3) {
+                *cellStatus = live;
             } else {
-                if(liveCellNeighbor == 3) {
-                    *cellStatus = live;  // reproduction
-                }
+                *cellStatus = dead;
             }
         }
     }
