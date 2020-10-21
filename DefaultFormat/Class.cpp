@@ -11,3 +11,9 @@ Temp<Entry>::Temp()
 {
 
 }
+
+template <class Entry>
+Temp<Entry>::~Temp()
+{
+
+}
