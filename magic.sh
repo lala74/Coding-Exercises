@@ -24,13 +24,21 @@ formatFolderName="DefaultFormat"
 readmeFormatFileName="README-format.md"
 readmeFileName="README.md"
 
-
 #################################################
 # Function
 function print_usage() {
-    echo -e "${red}${bold}${1}${reset}"
+    websiteFull="|"
+    for website in "${websites[@]}"; do
+        websiteFull+="$website|"
+    done
+    languageFull="|"
+    for language in "${languages[@]}"; do
+        languageFull+="$language|"
+    done
+
+    echo -e "${red}${bold}${1}${reset}" # Print error msg if there is any
     echo "Usage:                                                     #"
-    echo "      create_folder Kattis|Divers <problemName> C|C++|Python      #"
+    echo "      create_folder ${websiteFull} <problemName> ${languageFull}      #"
     exit 1
 }
 
