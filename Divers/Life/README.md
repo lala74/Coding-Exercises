@@ -21,11 +21,13 @@ The initial pattern constitutes the seed of the system. The first generation is 
 
 
 ```
-4 8
-. . . . . . . .
-. . . . * . . .
-. . . * * . . .
-. . . . . . . .
+Osciloscope
+5 5 10 300
+- - - - -
+- - - - -
+- + + + -
+- - - - -
+- - - - -
 
 
 Space Ship
