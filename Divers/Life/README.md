@@ -2,7 +2,10 @@
 
 [Link](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
-## Problem
+- [1. Problem](#1-problem)
+- [2. Build](#2-build)
+
+## 1. Problem
 The universe of the Game of Life is an infinite, two-dimensional orthogonal grid of square cells, each of which is in one of two possible states, live or dead, (or populated and unpopulated, respectively). Every cell interacts with its eight neighbours, which are the cells that are horizontally, vertically, or diagonally adjacent. At each step in time, the following transitions occur:
 
 - Any live cell with fewer than two live neighbours dies, as if by underpopulation.
@@ -63,4 +66,11 @@ Glider
 
 ```
 
+```
+
+## 2. Build
+
+```bash
+g++ -Wall -Werror -std=c++11 -O2 main.cpp Life.cpp -o main
+./main
 ```
