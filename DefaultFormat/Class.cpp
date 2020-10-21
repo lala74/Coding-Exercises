@@ -6,14 +6,12 @@
 #include <string>
 #include <vector>
 
-template <class Entry>
-Temp<Entry>::Temp()
+Temp::Temp()
 {
 
 }
 
-template <class Entry>
-Temp<Entry>::~Temp()
+Temp::~Temp()
 {
 
 }

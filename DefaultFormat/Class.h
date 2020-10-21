@@ -6,7 +6,6 @@
 
 using namespace std;
 
-template <class Entry>
 class Temp
 {
 public:
@@ -14,5 +13,5 @@ public:
     ~Temp();
 
 private:
-    Entry TempMember;
+    uint TempMember;
 };
