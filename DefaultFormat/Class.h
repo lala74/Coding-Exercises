@@ -10,8 +10,8 @@ template <class Entry>
 class Temp
 {
 public:
-    Temp(){};
-    ~Temp(){};
+    Temp();
+    ~Temp();
 
 private:
     Entry TempMember;
