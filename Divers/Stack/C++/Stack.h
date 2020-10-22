@@ -1,5 +1,4 @@
-#ifndef _TESTTEMP_H_
-#define _TESTTEMP_H_
+#pragma once
 
 #include <algorithm>
 #include <iostream>
@@ -100,5 +99,3 @@ errorCode Stack<Entry>::top(Entry& item)
     }
     return errorCode::success;
 }
-
-#endif
