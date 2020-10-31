@@ -33,7 +33,7 @@ public:
 private:
     bool is_full() const;
 
-public:
+private:
     uint count;
     Node<Entry>* topNode;
 };
@@ -48,6 +48,9 @@ LinkedStack<Entry>::LinkedStack() : count(0), topNode(nullptr)
 template <class Entry>
 LinkedStack<Entry>::~LinkedStack()
 {
+    while(!is_empty()) {
+        pop();
+    }
 }
 
 /********************************* */
@@ -65,14 +68,38 @@ errorCode LinkedStack<Entry>::push(const Entry& item)
 }
 
 template <class Entry>
+errorCode LinkedStack<Entry>::pop()
+{
+    if(is_empty()) {
+        return errorCode::underflow;
+    }
+    Node<Entry>* oldTop = topNode;
+    topNode = topNode->m_next;
+    delete oldTop;
+    return errorCode::success;
+}
+
+template <class Entry>
 errorCode LinkedStack<Entry>::top(Entry& item)
 {
     if(is_empty()) {
         return errorCode::fail;
     } else {
         item = topNode->m_data;
-        return errorCode::success;
     }
+    return errorCode::success;
+}
+
+template <class Entry>
+string LinkedStack<Entry>::stack_export() const
+{
+    stringstream result;
+    Node<Entry>* node = topNode;
+    while(node != nullptr) {
+        result << node->m_data << " ";
+        node = node->m_next;
+    }
+    return result.str();
 }
 
 /********************************* */

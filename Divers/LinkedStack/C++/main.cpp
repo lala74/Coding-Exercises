@@ -16,21 +16,40 @@ int main()
 
     // Input
     if(stack.push(1) != errorCode::success) {
+        cout << "Push failed" << endl;
+        return -1;
+    }
+    if(stack.push(2) != errorCode::success) {
+        cout << "Push failed" << endl;
+        return -1;
+    }
+    if(stack.push(3) != errorCode::success) {
+        cout << "Push failed" << endl;
         return -1;
     }
     // Main
 
     // Output
-    // cout << stack.stack_export() << endl;
+    cout << "Stack                  : " << stack.stack_export() << endl;
     if(stack.top(value) != errorCode::success) {
+        cout << "Top failed" << endl;
         return -1;
     }
-    cout << value << endl;
-    // stack.pop();
-    stack.top(value);
-    cout << value << endl;
-    stack.push(5);
-    // cout << stack.stack_export() << endl;
+    cout << "First value            : " << value << endl;
+    if(stack.pop() != errorCode::success) {
+        cout << "Pop failed" << endl;
+        return -1;
+    }
+    if(stack.top(value) != errorCode::success) {
+        cout << "Top failed" << endl;
+        return -1;
+    }
+    cout << "First value after pop  : " << value << endl;
+    if(stack.push(5) != errorCode::success) {
+        cout << "Push failed" << endl;
+        return -1;
+    }
+    cout << "Stack after push 5     : " << stack.stack_export() << endl;
 
     return 0;
 }
