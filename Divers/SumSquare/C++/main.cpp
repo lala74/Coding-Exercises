@@ -8,7 +8,7 @@
 using namespace std;
 
 const uint cSquareSize = 3;
-const uint cSum = 9;
+const uint cSum = 10;
 
 const uint cMin = 0;
 const uint cMax = cSum;
@@ -42,32 +42,36 @@ void print_result()
 int main(int argc, char** argv)
 {
     clock_t tStart = clock();
-    // Variable
+    // Variables
     string result;
-    uint count = 0;
+    uint countResult = 0;
+    uint countLoop = 0;
+    // Main
     for(a = cMin; a <= cMax; ++a) {
-        for(b = cMin; b <= cMax - a; ++b) {
-            c = cSum - a - b;
-            for(d = cMin; d <= cMax - a; ++d) {
-                for(e = cMin; e <= cMax - d; ++e) {
+        for(b = cMin; b <= cMax - a; ++b) {                                 // limit max b
+            c = cSum - a - b;                                               // calculate c from a and b
+            for(d = cMin; d <= cMax - a; ++d) {                             // limit max d
+                uint maxE = (cMax - d) < (cMax - b) ? cMax - d : cMax - b;  // choose to limit max e by d or b
+                for(e = cMin; e <= maxE; ++e) {
                     f = cSum - d - e;
-
+                    // Calculate g h i
                     g = cSum - a - d;
                     h = cSum - b - e;
                     i = cSum - c - f;
+
                     if(is_valid()) {
-                        count++;
+                        ++countResult;
                         print_result();
                     }
+                    ++countLoop;
                 }
             }
         }
     }
 
-    // Main
-
     // Output
-    cout << "count: " << count << endl;
+    cout << "Count result: " << countResult << endl;
+    cout << "Count loop  : " << countLoop << endl;
 
     printf("Time taken: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
     return 0;
