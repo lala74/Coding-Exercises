@@ -8,10 +8,10 @@
 using namespace std;
 
 const uint cSquareSize = 3;
-const uint cSum = 10;
+uint cSum = 9;
 
 const uint cMin = 0;
-const uint cMax = cSum;
+uint cMax = cSum;
 
 uint a, b, c;
 uint d, e, f;
@@ -47,6 +47,12 @@ int main(int argc, char** argv)
     uint countResult = 0;
     uint countLoop = 0;
     // Main
+    if (argc == 2){
+        string str(argv[1]);
+        cSum = stoi(str);
+        cMax = cSum;
+    }
+
     for(a = cMin; a <= cMax; ++a) {
         for(b = cMin; b <= cMax - a; ++b) {                                 // limit max b
             c = cSum - a - b;                                               // calculate c from a and b
