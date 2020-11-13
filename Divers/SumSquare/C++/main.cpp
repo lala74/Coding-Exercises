@@ -1,8 +1,9 @@
+#include <time.h>
+
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <time.h>
 
 using namespace std;
 
@@ -45,22 +46,18 @@ int main(int argc, char** argv)
     string result;
     uint count = 0;
     for(a = cMin; a <= cMax; ++a) {
-        for(b = cMin; b <= cMax; ++b) {
-            for(c = cMin; c <= cMax; ++c) {
-                for(d = cMin; d <= cMax; ++d) {
-                    for(e = cMin; e <= cMax; ++e) {
-                        for(f = cMin; f <= cMax; ++f) {
-                            for(g = cMin; g <= cMax; ++g) {
-                                for(h = cMin; h <= cMax; ++h) {
-                                    for(i = cMin; i <= cMax; ++i) {
-                                        if(is_valid()) {
-                                            count++;
-                                            print_result();
-                                        }
-                                    }
-                                }
-                            }
-                        }
+        for(b = cMin; b <= cMax - a; ++b) {
+            c = cSum - a - b;
+            for(d = cMin; d <= cMax - a; ++d) {
+                for(e = cMin; e <= cMax - d; ++e) {
+                    f = cSum - d - e;
+
+                    g = cSum - a - d;
+                    h = cSum - b - e;
+                    i = cSum - c - f;
+                    if(is_valid()) {
+                        count++;
+                        print_result();
                     }
                 }
             }
@@ -71,6 +68,7 @@ int main(int argc, char** argv)
 
     // Output
     cout << "count: " << count << endl;
-    printf("Time taken: %.2fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+    printf("Time taken: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
     return 0;
 }
