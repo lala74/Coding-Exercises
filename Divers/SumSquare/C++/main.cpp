@@ -76,6 +76,7 @@ int main(int argc, char** argv)
     }
 
     // Output
+    cout << "------------" << endl;
     cout << "Count result: " << countResult << endl;
     cout << "Count loop  : " << countLoop << endl;
 
