@@ -16,27 +16,26 @@ void swap(int* a, int* b)
 }
 
 // Sort array to 2 parties (one is smaller/equal than pivot, one is larger than pivot)
-int partition(int arr[], uint leftIndex, uint rightIndex)
+int partition(int arr[], int leftIndex, int rightIndex)
 {
-    uint i = leftIndex;
+    int i = leftIndex;
     int pivot = arr[leftIndex];  // choose pivot to be the first element of array
 
-    for(uint j = leftIndex + 1; j <= rightIndex; ++j) {  // iterate through all array with j
+    for(int j = leftIndex + 1; j <= rightIndex; ++j) {  // iterate through all array with j
         if(arr[j] <= pivot) {
-            swap(&arr[++i], &arr[j]);  // swap element smaller than pivot with the element at index i
+            swap(&arr[++i], &arr[j]);  // swap element smaller than pivot with the element at index i+1
         }
     }
     swap(&arr[leftIndex], &arr[i]);  // swap pivot to the last element of first party (smaller)
     return i;
 }
 
-void quicksort(int arr[], uint leftIndex, uint rightIndex)
+void quicksort(int arr[], int leftIndex, int rightIndex)
 {
-    uint index;
-
     if(leftIndex < rightIndex) {
+        int index;
         index = partition(arr, leftIndex, rightIndex);
-        quicksort(arr, leftIndex, index);
+        quicksort(arr, leftIndex, index - 1);
         quicksort(arr, index + 1, rightIndex);
     }
 }
@@ -47,19 +46,19 @@ int main(int argc, char** argv)
 
     // Variables
     stringstream result;
-    uint N;
+    int N;
 
     // Input
     cin >> N;
     int arr[N];
-    for(uint i = 0; i < N; ++i) {
+    for(int i = 0; i < N; ++i) {
         cin >> arr[i];
     }
 
     // Main
     quicksort(arr, 0, N - 1);
 
-    for(uint i = 0; i < N; ++i) {
+    for(int i = 0; i < N; ++i) {
         result << arr[i] << " ";
     }
 
