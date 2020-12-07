@@ -37,8 +37,8 @@ function print_usage() {
     done
 
     echo -e "${red}${bold}${1}${reset}" # Print error msg if there is any
-    echo "Usage:                                                     #"
-    echo "      create_folder ${websiteFull} <problemName> ${languageFull}      #"
+    echo "Usage:"
+    echo "      create_folder ${websiteFull} <problemName> ${languageFull}  "
     exit 1
 }
 
