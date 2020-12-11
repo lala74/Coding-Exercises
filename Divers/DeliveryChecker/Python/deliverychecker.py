@@ -26,7 +26,7 @@ def check_dropoff_before_pickup(posAddrs, addrs):
             src = addrs[index][0]
             dst = addrs[index][1]
             errorMsg += 'Passing to address dropoff ' + \
-                str(src) + ' before pickup in '+str(dst) + '\n'
+                str(dst) + ' before pickup in '+str(src) + '\n'
 
     return errorMsg
 
