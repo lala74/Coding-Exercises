@@ -6,51 +6,6 @@ import ast
 import json
 
 
-def position_of_addr_in_path(addr, path):
-    # return index of the address in path
-    try:
-        index = path.index(addr)
-        return index
-    except ValueError:
-        return -1
-
-
-def check_dropoff_before_pickup(posAddrs, addrs):
-    errorMsg = ''
-
-    for index, val in enumerate(posAddrs):
-        posSrc = val[0]
-        posDst = val[1]
-
-        if(posSrc >= posDst):
-            src = addrs[index][0]
-            dst = addrs[index][1]
-            errorMsg += 'Passing to address dropoff ' + \
-                str(dst) + ' before pickup in '+str(src) + '\n'
-
-    return errorMsg
-
-
-def build_action(posAddrs, pathLen):
-    # build actionList from posAddrs
-    actionList = [None] * pathLen
-    for src, dst in posAddrs:
-        actionList[src] = 'pickup'
-        actionList[dst] = 'dropoff'
-
-    return actionList
-
-
-def build_steps(path, actionList):
-    steps = []
-    for index in range(len(path)):
-        address = path[index]
-        action = actionList[index]
-        step = {"address": address, "action": action}
-        steps.append(step)
-    return steps
-
-
 def main(argv):
     # Parsing input to list
     addrs = ast.literal_eval(argv[0])
@@ -58,46 +13,57 @@ def main(argv):
 
     # Initialize variables
     error = False
-    errorCode = ''
-    errorMsg = ''
     returnValue = {}
-    returnJson = None
-
-    posAddrs = []   # index of src and dst of each address [[indexSrc, indexDst],...]
-    actionList = []
-    steps = []
-
-    for src, dst in addrs:
-        # Get index of src and dst in path
-        posSrc = position_of_addr_in_path(src, path)
-        posDst = position_of_addr_in_path(dst, path)
-
-        if (posSrc == -1 or posDst == -1):  # src or dst are not in path
+    # Build steps diction with address correspond with path
+    steps = [{'address': path[index], 'action':None}
+             for index in range(len(path))]
+    # Iterate through each addr in addrs
+    for pickAddr, dropAddr in addrs:
+        # Get index of pickup and dropoff point in path
+        try:
+            indexPick = path.index(pickAddr)
+            indexDrop = path.index(dropAddr)
+        except ValueError:
             error = True
-            errorCode = "delivery_address_not_in_path"
+            returnValue = buildErrorJSON_addrNotFound()
             break
-        # Build a list of all [indexSrc,indexDst]
-        posAddrs.append([posSrc, posDst])
+        if (indexPick >= indexDrop):
+            error = True
+            returnValue = buildErrorJSON_dropBeforePick(
+                returnValue, pickAddr, dropAddr)
+        else:
+            if (error == False):
+                steps[indexPick]["action"] = "pickup"
+                steps[indexDrop]["action"] = "dropoff"
 
-    # Check dropoff before pickup
-    errorMsg = check_dropoff_before_pickup(posAddrs, addrs)
-    if (errorMsg != ''):
-        error = True
-        errorCode = "delivery_dropoff_before_pickup"
-
-    # If there is no error, build return json, if there is error, build error msg
     if (error == False):
-        returnValue['status'] = 'success'
-        actionList = build_action(posAddrs, len(path))
-        steps = build_steps(path, actionList)
-        returnValue['steps'] = steps
-    else:
-        returnValue['status'] = 'error'
-        returnValue['error_code'] = errorCode
-        returnValue['error_message'] = errorMsg
-
+        returnValue = buildSuccessJSON(steps)
     returnJson = json.dumps(returnValue)
     print(returnJson)
+
+
+def buildErrorJSON_addrNotFound():
+    returnJSON = {}
+    returnJSON['status'] = 'error'
+    returnJSON['error_code'] = 'delivery_address_not_in_path'
+    returnJSON['error_message'] = '...'
+    return returnJSON
+
+
+def buildErrorJSON_dropBeforePick(returnJSON, pickAddr, dropAddr):
+    returnJSON['status'] = 'error'
+    returnJSON['error_code'] = 'delivery_dropoff_before_pickup'
+    returnJSON['error_message'] = str(returnJSON.get('error_message')) + \
+        'Passing to address dropoff ' + str(dropAddr) + \
+        ' before pickup in '+str(pickAddr) + '\n'
+    return returnJSON
+
+
+def buildSuccessJSON(steps):
+    returnJSON = {}
+    returnJSON['status'] = 'success'
+    returnJSON['steps'] = steps
+    return returnJSON
 
 
 if __name__ == '__main__':
