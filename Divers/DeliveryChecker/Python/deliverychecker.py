@@ -14,7 +14,7 @@ def main(argv):
     # Initialize variables
     error = False
     returnValue = {}
-    # Build steps diction with address correspond with path
+    # Build steps dictionary with address correspond with path
     steps = [{'address': path[index], 'action':None}
              for index in range(len(path))]
     # Iterate through each addr in addrs
@@ -30,7 +30,7 @@ def main(argv):
         if (indexPick >= indexDrop):
             error = True
             returnValue = buildErrorJSON_dropBeforePick(
-                returnValue, pickAddr, dropAddr)
+                pickAddr, dropAddr, returnValue.get('error_message'))
         else:
             if (error == False):
                 steps[indexPick]["action"] = "pickup"
@@ -50,10 +50,13 @@ def buildErrorJSON_addrNotFound():
     return returnJSON
 
 
-def buildErrorJSON_dropBeforePick(returnJSON, pickAddr, dropAddr):
+def buildErrorJSON_dropBeforePick(pickAddr, dropAddr, errorMsg):
+    if (errorMsg == None):
+        errorMsg = ''
+    returnJSON = {}
     returnJSON['status'] = 'error'
     returnJSON['error_code'] = 'delivery_dropoff_before_pickup'
-    returnJSON['error_message'] = str(returnJSON.get('error_message')) + \
+    returnJSON['error_message'] = errorMsg + \
         'Passing to address dropoff ' + str(dropAddr) + \
         ' before pickup in '+str(pickAddr) + '\n'
     return returnJSON
