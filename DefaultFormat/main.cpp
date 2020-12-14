@@ -6,6 +6,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
@@ -13,9 +14,7 @@ using namespace std;
 class Solution
 {
 public:
-    int solution()
-    {
-    }
+    int solution() {}
 };
 
 int main(int argc, char** argv)
