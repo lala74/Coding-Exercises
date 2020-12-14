@@ -5,6 +5,7 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
@@ -15,10 +16,19 @@ public:
     vector<int> twoSum(vector<int>& nums, int target)
     {
         vector<int> result;
-        for(vector<int>::size_type i = 0; i < nums.size() - 1; ++i) {
-            for(vector<int>::size_type j = i + 1; j < nums.size(); ++j) {
-                if((nums.at(i) + nums.at(j)) == target) {
-                    result = {static_cast<int>(i), static_cast<int>(j)};
+        unordered_map<int, int> hashMap;
+        for(vector<int>::size_type i = 0; i < nums.size(); ++i) {
+            hashMap.insert({nums.at(i), static_cast<int>(i)});
+        }
+        for(vector<int>::size_type i = 0; i < nums.size(); ++i) {
+            int secondValue = target - nums.at(i);
+            auto it = hashMap.find(secondValue);
+            if(it != hashMap.end()) {
+                if(hashMap[secondValue] != static_cast<int>(i)) {
+                    result = {
+                        static_cast<int>(i),
+                        hashMap[secondValue],
+                    };
                     break;
                 }
             }
