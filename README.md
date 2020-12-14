@@ -13,6 +13,10 @@ This is a repository for coding exercises
 ### 2.1. Compile and execute
 
 ```bash
+# Prerequires
+sudo apt install libprocps-dev:i386 libprocps-dev
+# Compile
 g++ -Wall -Werror -std=c++11 -O2 main.cpp -o main -lprocps
+# Execute
 ./main
 ```
