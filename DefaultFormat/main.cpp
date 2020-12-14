@@ -1,6 +1,7 @@
 #include <time.h>
 
 #include <algorithm>
+#include <cstdlib>
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -9,16 +10,26 @@
 
 using namespace std;
 
+class Solution
+{
+public:
+    int solution()
+    {
+    }
+};
+
 int main(int argc, char** argv)
 {
     clock_t tStart = clock();
 
     // Variables
-    string result;
+    int result;
 
     // Input
 
     // Main
+    Solution solution;
+    result = solution.solution();
 
     // Output
     cout << result << endl;
