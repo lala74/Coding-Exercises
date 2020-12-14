@@ -16,18 +16,14 @@ class Solution
 public:
     int findDuplicate(vector<int>& nums)
     {
-        int duplicate = 0;
-        int length = static_cast<int>(nums.size());
-        unordered_set<int> hashSet;
-        for(int i = 0; i < length; ++i) {
-            if(hashSet.find(nums.at(i)) != hashSet.end()) {
-                duplicate = nums.at(i);
-                break;
-            } else {
-                hashSet.insert({nums.at(i)});
+        int len = static_cast<int>(nums.size());
+        sort(nums.begin(), nums.end());
+        for (int i=0; i < len-1; ++i) {
+            if (nums.at(i) == nums.at(i+1)) {
+                return nums.at(i);
             }
         }
-        return duplicate;
+        return 0;
     }
 };
 
