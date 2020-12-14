@@ -14,6 +14,7 @@ languages=(
 websites=(
     "Kattis"
     "Divers"
+    "LeetCode"
 )
 
 red="\e[41m"
