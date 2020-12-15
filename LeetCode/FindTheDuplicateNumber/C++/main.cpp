@@ -18,13 +18,20 @@ public:
     int findDuplicate(vector<int>& nums)
     {
         int len = static_cast<int>(nums.size());
-        sort(nums.begin(), nums.end());
-        for(int i = 0; i < len - 1; ++i) {
-            if(nums.at(i) == nums.at(i + 1)) {
-                return nums.at(i);
+        int seenArr[len];
+        for(int i = 0; i < len; ++i) {
+            seenArr[i] = 0;
+        }
+        int value = nums.at(0);
+        while(1) {
+            if(seenArr[value] == 1) {
+                break;
+            } else {
+                seenArr[value] = 1;
+                value = nums.at(value);
             }
         }
-        return 0;
+        return value;
     }
 };
 
