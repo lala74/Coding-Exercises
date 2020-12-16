@@ -29,17 +29,42 @@ public:
     // }
 
     // 2nd solution
+    // void rotate(vector<int>& nums, int k)
+    // {
+    //     int len = static_cast<int>(nums.size());
+    //     int temp, previous;
+    //     k %= len;
+    //     for(int rotation = 0; rotation < k; ++rotation) {
+    //          previous = nums[len - 1];
+    //         for(int i = 0; i < len; ++i) {
+    //             temp = nums[i];
+    //             nums[i] = previous;
+    //             previous = temp;
+    //         }
+    //     }
+    // }
+
+    // 3rd solution
     void rotate(vector<int>& nums, int k)
     {
         int len = static_cast<int>(nums.size());
         k %= len;
-        for(int rotation = 0; rotation < k; ++rotation) {
-            int previous = nums[len - 1];
-            for(int i = 0; i < len; ++i) {
-                int temp = nums[i];
-                nums[i] = previous;
-                previous = temp;
-            }
+        if(k == 0) return;
+        reverse(nums, 0, len - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, len - 1);
+    }
+
+private:
+    void reverse(vector<int>& nums, int begin, int end)
+    {
+        int temp;
+        int j = 0;
+        for(int i = begin; i <= (begin + end) / 2; ++i) {
+            temp = nums[i];
+            nums[i] = nums[end - j];
+            nums[end - j] = temp;
+            ++j;
         }
     }
 };
@@ -50,8 +75,8 @@ int main(int argc, char** argv)
     clock_t tStart = clock();
 
     // Variables
-    vector<int> nums = {1, 2, 3, 4, 5, 6, 7};
-    int k = 3;
+    vector<int> nums = {1, 2};
+    int k = 2;
 
     // Input
 
