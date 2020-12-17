@@ -15,33 +15,49 @@ using namespace std;
 class Solution
 {
 public:
+    //  1st solution
+    //     int maxProfit(vector<int>& prices)
+    //     {
+    //         int len = static_cast<int>(prices.size());
+    //         int priceHold = 0, profit = 0;
+    //         int nextAction = BUY;
+    //         for(int i = 0; i < len - 1; ++i) {
+    //             int priceNow = prices[i];
+    //             int priceNext = prices[i + 1];
+    //             if((nextAction == BUY) && (priceNext > priceNow)) {
+    //                 nextAction = SELL;
+    //                 priceHold = priceNow;
+    //             }
+    //             if((nextAction == SELL) && (priceNext < priceNow)) {
+    //                 nextAction = BUY;
+    //                 profit += (priceNow - priceHold);
+    //             }
+    //         }
+    //         int lastPrice = prices[len-1];
+    //         if ((nextAction == SELL) && (lastPrice > priceHold)) {
+    //             profit += lastPrice - priceHold;
+    //         }
+    //         return profit;
+    //     }
+
+    // private:
+    //     const int BUY = 1;
+    //     const int SELL = 0;
+
+    // 2nd solution
     int maxProfit(vector<int>& prices)
     {
         int len = static_cast<int>(prices.size());
-        int priceHold = 0, profit = 0;
-        int nextAction = BUY;
+        int maxProfit = 0;
         for(int i = 0; i < len - 1; ++i) {
             int priceNow = prices[i];
             int priceNext = prices[i + 1];
-            if((nextAction == BUY) && (priceNext > priceNow)) {
-                nextAction = SELL;
-                priceHold = priceNow;
-            }
-            if((nextAction == SELL) && (priceNext < priceNow)) {
-                nextAction = BUY;
-                profit += (priceNow - priceHold);
+            if(priceNext > priceNow) {
+                maxProfit += (priceNext - priceNow);
             }
         }
-        int lastPrice = prices[len-1];
-        if ((nextAction == SELL) && (lastPrice > priceHold)) {
-            profit += lastPrice - priceHold;
-        }
-        return profit;
+        return maxProfit;
     }
-
-private:
-    const int BUY = 1;
-    const int SELL = 0;
 };
 
 int main(int argc, char** argv)
@@ -51,7 +67,7 @@ int main(int argc, char** argv)
 
     // Variables
     int result;
-    vector<int> prices = {7,6,4,3,1};
+    vector<int> prices = {7, 1, 5, 3, 6, 7};
 
     // Input
 
