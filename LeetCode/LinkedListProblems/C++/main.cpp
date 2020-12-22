@@ -86,6 +86,37 @@ public:
         head->next = nullptr;
         return dummyHead;
     }
+
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2)
+    {
+        if(l1 == nullptr) return l2;
+        if(l2 == nullptr) return l1;
+
+        ListNode* c1 = l1;
+        ListNode* c2 = l2;
+        ListNode* tmp = nullptr;
+
+        while((c1 != nullptr) && (c2 != nullptr)) {
+            if((c1->next != nullptr) && (c1->next->val <= c2->val)) {
+                c1 = c1->next;
+                continue;
+            }
+            if((c2->next != nullptr) && (c2->next->val < c1->val)) {
+                c2 = c2->next;
+                continue;
+            }
+            if(c1->val <= c2->val) {
+                tmp = c1->next;
+                c1->next = c2;
+                c1 = tmp;
+            } else {
+                tmp = c2->next;
+                c2->next = c1;
+                c2 = tmp;
+            }
+        }
+        return (l1->val <= l2->val) ? l1 : l2;
+    }
 };
 
 int main(int argc, char** argv)
@@ -97,24 +128,34 @@ int main(int argc, char** argv)
     ListNode* result;
 
     // Input
-    ListNode head(1);
-    ListNode* current = &head;
-    for(int i = 2; i <= 5; ++i) {
-        current->next = (ListNode*)malloc(sizeof(ListNode));
-        current->next->val = i;
-        current->next->next = nullptr;
-        current = current->next;
-    }
+    ListNode* head = new ListNode(8);
+    head = new ListNode(6, head);
+    head = new ListNode(5, head);
+    head = new ListNode(2, head);
+    head = new ListNode(1, head);
+    ListNode* secondHead = new ListNode(10);
+    secondHead = new ListNode(7, secondHead);
+    secondHead = new ListNode(4, secondHead);
+    secondHead = new ListNode(3, secondHead);
+    secondHead = new ListNode(1, secondHead);
+
     // removeNthFromEnd
     // Main
     Solution solution;
-    // result = solution.removeNthFromEnd(&head, 2);
-    result = solution.reverseList(&head);
+    // result = solution.removeNthFromEnd(head, 2);
+    // result = solution.reverseList(head);
+    result = solution.mergeTwoLists(head, secondHead);
     // Output
-    while(result != nullptr) {
-        cout << result->val << ' ';
-        result = result->next;
+    for(int i = 0; i < 100; ++i) {
+        if(result != nullptr) {
+            cout << result->val << ' ';
+            result = result->next;
+        }
     }
+    // while(result != nullptr) {
+    //     cout << result->val << ' ';
+    //     result = result->next;
+    // }
     cout << '\n';
     // Runtime
     cout << "------------" << endl;
