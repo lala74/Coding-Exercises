@@ -118,7 +118,19 @@ public:
         return (l1->val <= l2->val) ? l1 : l2;
     }
 
-    // bool hasCycle(ListNode* head) {}
+    bool hasCycle(ListNode* head)
+    {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while(1) {
+            if (fast == nullptr) return false;
+            if (fast->next == nullptr) return false;
+            slow = slow->next;
+            fast = fast->next->next;
+            if (slow == fast) return true;
+        }
+        return false;
+    }
 };
 
 int main(int argc, char** argv)
@@ -127,7 +139,7 @@ int main(int argc, char** argv)
     clock_t tStart = clock();
 
     // Variables
-    ListNode* result;
+    bool result;
 
     // Input
     ListNode* head = new ListNode(8);
@@ -146,13 +158,10 @@ int main(int argc, char** argv)
     Solution solution;
     // result = solution.removeNthFromEnd(head, 2);
     // result = solution.reverseList(head);
-    result = solution.mergeTwoLists(head, secondHead);
+    // result = solution.mergeTwoLists(head, secondHead);
+    result = solution.hasCycle(head);
     // Output
-    while(result != nullptr) {
-        cout << result->val << ' ';
-        result = result->next;
-    }
-    cout << '\n';
+    cout << result << endl;
     // Runtime
     cout << "------------" << endl;
     printf("Time taken  : %.2f s\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
