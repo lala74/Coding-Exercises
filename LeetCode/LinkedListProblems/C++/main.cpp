@@ -43,21 +43,38 @@ public:
 
     ListNode* reverseList(ListNode* head)
     {
-        ListNode* reverseHead = nullptr;
-        ListNode* current = head;
-        // Create a linked-list with reverse value
-        while(current != nullptr) {
-            ListNode *node = new ListNode(current->val, reverseHead);
-            reverseHead = node;
-            current = current->next;
+        // // 1rst solution
+        // ListNode* reverseHead = nullptr;
+        // ListNode* current = head;
+        // // Create a linked-list with reverse value
+        // while(current != nullptr) {
+        //     ListNode *node = new ListNode(current->val, reverseHead);
+        //     reverseHead = node;
+        //     current = current->next;
+        // }
+        // // Copy reverse list to actual list
+        // current = head;
+        // while(reverseHead != nullptr) {
+        //     current->val = reverseHead->val;
+        //     reverseHead = reverseHead->next;
+        //     current = current->next;
+        // }
+        // return head;
+
+        // 2nd solution
+        // Iterate through List and reverse direction of each link
+        ListNode* node = nullptr;
+        ListNode* dummyHead = nullptr;
+        node = head;
+        while (node != nullptr) {
+            // Move node to next node, use tmp to save current node
+            ListNode* tmp = node;
+            node = node->next;
+            // Reverse direction of each link
+            tmp->next = dummyHead;
+            dummyHead = tmp;
         }
-        // Copy reverse list to actual list
-        current = head;
-        while(reverseHead != nullptr) {
-            current->val = reverseHead->val;
-            reverseHead = reverseHead->next;
-            current = current->next;
-        }
+        head = dummyHead;
         return head;
     }
 };
