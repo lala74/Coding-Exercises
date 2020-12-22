@@ -61,21 +61,30 @@ public:
         // }
         // return head;
 
-        // 2nd solution
-        // Iterate through List and reverse direction of each link
-        ListNode* node = nullptr;
-        ListNode* dummyHead = nullptr;
-        node = head;
-        while (node != nullptr) {
-            // Move node to next node, use tmp to save current node
-            ListNode* tmp = node;
-            node = node->next;
-            // Reverse direction of each link
-            tmp->next = dummyHead;
-            dummyHead = tmp;
+        // // 2nd solution
+        // // Iterate through List and reverse direction of each link
+        // ListNode* node = nullptr;
+        // ListNode* dummyHead = nullptr;
+        // node = head;
+        // while (node != nullptr) {
+        //     // Move node to next node, use tmp to save current node
+        //     ListNode* tmp = node;
+        //     node = node->next;
+        //     // Reverse direction of each link
+        //     tmp->next = dummyHead;
+        //     dummyHead = tmp;
+        // }
+        // head = dummyHead;
+        // return head;
+
+        // 3rd solution - recursive
+        if((head == nullptr) || (head->next == nullptr)) {
+            return head;
         }
-        head = dummyHead;
-        return head;
+        ListNode* dummyHead = reverseList(head->next);
+        head->next->next = head;
+        head->next = nullptr;
+        return dummyHead;
     }
 };
 
