@@ -117,6 +117,8 @@ public:
         }
         return (l1->val <= l2->val) ? l1 : l2;
     }
+
+    // bool hasCycle(ListNode* head) {}
 };
 
 int main(int argc, char** argv)
@@ -146,16 +148,10 @@ int main(int argc, char** argv)
     // result = solution.reverseList(head);
     result = solution.mergeTwoLists(head, secondHead);
     // Output
-    for(int i = 0; i < 100; ++i) {
-        if(result != nullptr) {
-            cout << result->val << ' ';
-            result = result->next;
-        }
+    while(result != nullptr) {
+        cout << result->val << ' ';
+        result = result->next;
     }
-    // while(result != nullptr) {
-    //     cout << result->val << ' ';
-    //     result = result->next;
-    // }
     cout << '\n';
     // Runtime
     cout << "------------" << endl;
