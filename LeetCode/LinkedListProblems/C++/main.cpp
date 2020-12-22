@@ -30,7 +30,7 @@ public:
         ListNode* slow = dummy;
         ListNode* fast = dummy;
 
-        for(int i = 1; i <= n+1; ++i) {
+        for(int i = 1; i <= n + 1; ++i) {
             fast = fast->next;
         }
         while(fast != nullptr) {
@@ -39,6 +39,26 @@ public:
         }
         slow->next = slow->next->next;
         return dummy->next;
+    }
+
+    ListNode* reverseList(ListNode* head)
+    {
+        ListNode* reverseHead = nullptr;
+        ListNode* current = head;
+        // Create a linked-list with reverse value
+        while(current != nullptr) {
+            ListNode *node = new ListNode(current->val, reverseHead);
+            reverseHead = node;
+            current = current->next;
+        }
+        // Copy reverse list to actual list
+        current = head;
+        while(reverseHead != nullptr) {
+            current->val = reverseHead->val;
+            reverseHead = reverseHead->next;
+            current = current->next;
+        }
+        return head;
     }
 };
 
@@ -52,18 +72,18 @@ int main(int argc, char** argv)
 
     // Input
     ListNode head(1);
-    // ListNode* current = &head;
-    // for(int i = 2; i <= 5; ++i) {
-    //     current->next = (ListNode*)malloc(sizeof(ListNode));
-    //     current->next->val = i;
-    //     current->next->next = nullptr;
-    //     current = current->next;
-    // }
-
+    ListNode* current = &head;
+    for(int i = 2; i <= 5; ++i) {
+        current->next = (ListNode*)malloc(sizeof(ListNode));
+        current->next->val = i;
+        current->next->next = nullptr;
+        current = current->next;
+    }
+    // removeNthFromEnd
     // Main
     Solution solution;
-    result = solution.removeNthFromEnd(&head, 1);
-
+    // result = solution.removeNthFromEnd(&head, 2);
+    result = solution.reverseList(&head);
     // Output
     while(result != nullptr) {
         cout << result->val << ' ';
