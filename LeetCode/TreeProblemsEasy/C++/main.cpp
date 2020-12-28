@@ -133,9 +133,24 @@ public:
     //         }
     //         return (is_valid_BST(root->left, min, &root->val) && (is_valid_BST(root->right, &root->val, max)));
     //     }
-    bool isSymmetric(TreeNode* root) { return true; }
+    bool isSymmetric(TreeNode* root)
+    {
+        if(root == nullptr) return true;
+        return is_symmetric(root->left, root->right);
+    }
 
 private:
+    bool is_symmetric(TreeNode* left, TreeNode* right)
+    {
+        if((left == nullptr) && (right == nullptr)) {
+            return true;
+        } else {
+            if(left == nullptr) return false;
+            if(right == nullptr) return false;
+        }
+        if(left->val != right->val) return false;
+        return (is_symmetric(left->left, right->right) && is_symmetric(left->right, right->left));
+    }
 };
 
 int main(int argc, char** argv)
@@ -147,11 +162,12 @@ int main(int argc, char** argv)
     int result;
 
     // Input
-    int arr[] = {1, 2, 2, 3, 4, 4, 3};
+    int arr[] = {1, 2, 2, NULL, 3, NULL, 3};
     int n = sizeof(arr) / sizeof(arr[0]);
     TreeNode* root = nullptr;
     root = insertLevelOrder(arr, root, 0, n);
     inOrder(root);
+    cout << '\n';
 
     // Main
     Solution solution;
