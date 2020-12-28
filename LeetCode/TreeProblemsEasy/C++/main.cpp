@@ -33,52 +33,52 @@ public:
         if(root->right == nullptr) return maxDepth(root->left) + 1;
         return max(maxDepth(root->left) + 1, maxDepth(root->right) + 1);
     }
+//     // 1st solution 
+//     bool isValidBST(TreeNode* root)
+//     {
+//         if(root == nullptr) return true;
+//         int minSub = root->val;
+//         int maxSub = root->val;
+//         return is_valid_BST(root, &minSub, &maxSub);
+//     }
 
-    bool isValidBST(TreeNode* root)
-    {
-        if(root == nullptr) return true;
-        int minSub = root->val;
-        int maxSub = root->val;
-        return is_valid_BST(root, &minSub, &maxSub);
-    }
-
-private:
-    bool is_valid_BST(TreeNode* root, int* minSub, int* maxSub)
-    {
-        if((root->left == nullptr) && (root->right == nullptr)) {
-            *minSub = root->val;
-            *maxSub = root->val;
-            return true;
-        }
-        if(root->left == nullptr) {
-            if(!is_valid_BST(root->right, minSub, maxSub) || (*minSub <= root->val)) {
-                return false;
-            }
-            *minSub = root->val;
-            return true;
-        }
-        if(root->right == nullptr) {
-            if(!is_valid_BST(root->left, minSub, maxSub) || (*maxSub >= root->val)) {
-                return false;
-            }
-            *maxSub = root->val;
-            return true;
-        }
-        int min = 0, max = 0;
-        if(is_valid_BST(root->left, minSub, maxSub) && (*maxSub < root->val)) {
-            min = *minSub;
-        } else {
-            return false;
-        }
-        if(is_valid_BST(root->right, minSub, maxSub) && (*minSub > root->val)) {
-            max = *maxSub;
-        } else {
-            return false;
-        }
-        *minSub = min;
-        *maxSub = max;
-        return true;
-    }
+// private:
+//     bool is_valid_BST(TreeNode* root, int* minSub, int* maxSub)
+//     {
+//         if((root->left == nullptr) && (root->right == nullptr)) {
+//             *minSub = root->val;
+//             *maxSub = root->val;
+//             return true;
+//         }
+//         if(root->left == nullptr) {
+//             if(!is_valid_BST(root->right, minSub, maxSub) || (*minSub <= root->val)) {
+//                 return false;
+//             }
+//             *minSub = root->val;
+//             return true;
+//         }
+//         if(root->right == nullptr) {
+//             if(!is_valid_BST(root->left, minSub, maxSub) || (*maxSub >= root->val)) {
+//                 return false;
+//             }
+//             *maxSub = root->val;
+//             return true;
+//         }
+//         int min = 0, max = 0;
+//         if(is_valid_BST(root->left, minSub, maxSub) && (*maxSub < root->val)) {
+//             min = *minSub;
+//         } else {
+//             return false;
+//         }
+//         if(is_valid_BST(root->right, minSub, maxSub) && (*minSub > root->val)) {
+//             max = *maxSub;
+//         } else {
+//             return false;
+//         }
+//         *minSub = min;
+//         *maxSub = max;
+//         return true;
+//     }
 };
 
 int main(int argc, char** argv)
