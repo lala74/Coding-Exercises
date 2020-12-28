@@ -33,7 +33,7 @@ public:
     int maxProfit(vector<int>& prices)
     {
         int len = static_cast<int>(prices.size());
-        if ((len == 0) || (len == 1)) return 0;
+        if((len == 0) || (len == 1)) return 0;
         int maxProfits[len];
         int min = prices[0];
         maxProfits[0] = 0;
@@ -42,6 +42,21 @@ public:
             maxProfits[day] = std::max(maxProfits[day - 1], prices[day] - min);
         }
         return maxProfits[len - 1];
+    }
+
+    // Max Subarray
+    int maxSubArray(vector<int>& nums)
+    {
+        int len = static_cast<int>(nums.size());
+        if(len == 0) return 0;
+        int maxCurrentSub = 0;
+        int maxGlobalSub = nums[0];
+        for(int num : nums) {
+            if (maxCurrentSub < 0) maxCurrentSub = 0;
+            maxCurrentSub += num;
+            maxGlobalSub = std::max(maxGlobalSub, maxCurrentSub);
+        }
+        return maxGlobalSub;
     }
 };
 
@@ -54,12 +69,14 @@ int main(int argc, char** argv)
     int result;
 
     // Input
-    vector<int> prices{7, 1, 5, 3, 6, 4};
+    // vector<int> prices{7, 1, 5, 3, 6, 4};
+    vector<int> nums{-2, 1, -3, 4, -1, 2, 1, -5, 4};
 
     // Main
     Solution solution;
     // result = solution.climbStairs(3);
-    result = solution.maxProfit(prices);
+    // result = solution.maxProfit(prices);
+    result = solution.maxSubArray(nums);
 
     // Output
     cout << result << endl;
