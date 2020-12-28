@@ -52,11 +52,27 @@ public:
         int maxCurrentSub = 0;
         int maxGlobalSub = nums[0];
         for(int num : nums) {
-            if (maxCurrentSub < 0) maxCurrentSub = 0;
+            if(maxCurrentSub < 0) maxCurrentSub = 0;
             maxCurrentSub += num;
             maxGlobalSub = std::max(maxGlobalSub, maxCurrentSub);
         }
         return maxGlobalSub;
+    }
+
+    // House Robber
+    int rob(vector<int>& nums)
+    {
+        int len = static_cast<int>(nums.size());
+        if(len == 0) return 0;
+        if(len == 1) return nums[0];
+        if(len == 2) return std::max(nums[0], nums[1]);
+        int maxMoneys[len];
+        maxMoneys[0] = nums[0];
+        maxMoneys[1] = std::max(nums[0], nums[1]);
+        for(int i = 2; i < len; ++i) {
+            maxMoneys[i] = std::max(maxMoneys[i - 1], maxMoneys[i - 2] + nums[i]);
+        }
+        return maxMoneys[len - 1];
     }
 };
 
@@ -69,14 +85,16 @@ int main(int argc, char** argv)
     int result;
 
     // Input
-    // vector<int> prices{7, 1, 5, 3, 6, 4};
-    vector<int> nums{-2, 1, -3, 4, -1, 2, 1, -5, 4};
+    // vector<int> prices{7, 1, 5, 3, 6, 4};    // maxProfit
+    // vector<int> nums{-2, 1, -3, 4, -1, 2, 1, -5, 4}; // maxSubArray
+    vector<int> nums{2, 1, 1, 2};  // rob
 
     // Main
     Solution solution;
     // result = solution.climbStairs(3);
     // result = solution.maxProfit(prices);
-    result = solution.maxSubArray(nums);
+    // result = solution.maxSubArray(nums);
+    result = solution.rob(nums);
 
     // Output
     cout << result << endl;
