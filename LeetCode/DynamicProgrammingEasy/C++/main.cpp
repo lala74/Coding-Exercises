@@ -28,6 +28,21 @@ public:
         }
         return steps[n];
     }
+
+    // Best Time to Buy and Sell Stock
+    int maxProfit(vector<int>& prices)
+    {
+        int len = static_cast<int>(prices.size());
+        if ((len == 0) || (len == 1)) return 0;
+        int maxProfits[len];
+        int min = prices[0];
+        maxProfits[0] = 0;
+        for(int day = 1; day < len; ++day) {
+            min = std::min(min, prices[day]);
+            maxProfits[day] = std::max(maxProfits[day - 1], prices[day] - min);
+        }
+        return maxProfits[len - 1];
+    }
 };
 
 int main(int argc, char** argv)
@@ -39,10 +54,12 @@ int main(int argc, char** argv)
     int result;
 
     // Input
+    vector<int> prices{7, 1, 5, 3, 6, 4};
 
     // Main
     Solution solution;
-    result = solution.climbStairs(3);
+    // result = solution.climbStairs(3);
+    result = solution.maxProfit(prices);
 
     // Output
     cout << result << endl;
