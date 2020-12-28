@@ -23,6 +23,41 @@ struct TreeNode {
     TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
 };
 
+TreeNode* newNode(int data)
+{
+    TreeNode* node = (TreeNode*)malloc(sizeof(TreeNode));
+    node->val = data;
+    node->left = node->right = NULL;
+    return (node);
+}
+
+// Function to insert nodes in level order
+TreeNode* insertLevelOrder(int arr[], TreeNode* root, int i, int n)
+{
+    // Base case for recursion
+    if(i < n) {
+        TreeNode* temp = newNode(arr[i]);
+        root = temp;
+
+        // insert left child
+        root->left = insertLevelOrder(arr, root->left, 2 * i + 1, n);
+
+        // insert right child
+        root->right = insertLevelOrder(arr, root->right, 2 * i + 2, n);
+    }
+    return root;
+}
+
+// Function to print tree nodes in
+// InOrder fashion
+void inOrder(TreeNode* root)
+{
+    if(root != NULL) {
+        inOrder(root->left);
+        cout << root->val << " ";
+        inOrder(root->right);
+    }
+}
 class Solution
 {
 public:
@@ -98,9 +133,9 @@ public:
     //         }
     //         return (is_valid_BST(root->left, min, &root->val) && (is_valid_BST(root->right, &root->val, max)));
     //     }
-    bool isSymmetric(TreeNode* root) {
-        return true;
-    }
+    bool isSymmetric(TreeNode* root) { return true; }
+
+private:
 };
 
 int main(int argc, char** argv)
@@ -112,18 +147,11 @@ int main(int argc, char** argv)
     int result;
 
     // Input
-    TreeNode* left = new TreeNode(15);
-    TreeNode* right = new TreeNode(2147483647);
-    TreeNode* root = new TreeNode(20, left, right);
-    right = root;
-    left = new TreeNode(5);
-    root = new TreeNode(9, left, right);
-
-    cout << root->val << endl;
-    cout << root->left->val << ' ';
-    cout << root->right->val << endl;
-    cout << root->right->left->val << ' ';
-    cout << root->right->right->val << endl;
+    int arr[] = {1, 2, 2, 3, 4, 4, 3};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    TreeNode* root = nullptr;
+    root = insertLevelOrder(arr, root, 0, n);
+    inOrder(root);
 
     // Main
     Solution solution;
