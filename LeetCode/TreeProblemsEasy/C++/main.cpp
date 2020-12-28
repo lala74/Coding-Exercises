@@ -80,23 +80,26 @@ public:
     //         *maxSub = max;
     //         return true;
     //     }
-//  2nd solution
-    bool isValidBST(TreeNode* root)
-    {
-        return is_valid_BST(root, nullptr, nullptr);
-    }
+    // //  2nd solution
+    //     bool isValidBST(TreeNode* root)
+    //     {
+    //         return is_valid_BST(root, nullptr, nullptr);
+    //     }
 
-private:
-    bool is_valid_BST(TreeNode* root, const int* min, const int* max)
-    {
-        if(root == nullptr) return true;
-        if ((min != nullptr) && (root->val <= *min)) {
-            return false;
-        }
-        if((max != nullptr) && (root->val >= *max)) {
-            return false;
-        }
-        return (is_valid_BST(root->left, min, &root->val) && (is_valid_BST(root->right, &root->val, max)));
+    // private:
+    //     bool is_valid_BST(TreeNode* root, const int* min, const int* max)
+    //     {
+    //         if(root == nullptr) return true;
+    //         if ((min != nullptr) && (root->val <= *min)) {
+    //             return false;
+    //         }
+    //         if((max != nullptr) && (root->val >= *max)) {
+    //             return false;
+    //         }
+    //         return (is_valid_BST(root->left, min, &root->val) && (is_valid_BST(root->right, &root->val, max)));
+    //     }
+    bool isSymmetric(TreeNode* root) {
+        return true;
     }
 };
 
@@ -125,7 +128,8 @@ int main(int argc, char** argv)
     // Main
     Solution solution;
     // result = solution.maxDepth(root);
-    result = solution.isValidBST(root);
+    // result = solution.isValidBST(root);
+    result = solution.isSymmetric(root);
 
     // Output
     cout << result << endl;
