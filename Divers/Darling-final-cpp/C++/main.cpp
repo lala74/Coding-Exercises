@@ -19,35 +19,97 @@ struct contactType {
     string address;
 };
 
-typedef vector<contactType> contactListType;
+enum returnValue {
+    OK = 0,
+    CONTACT_EXISTED = 1,
+    INVALID_INPUT = 2,
+    CONTACT_NOT_FOUND = 3,
+};
+
+// Main function
+int add_new_contact_to_file(string fileName, contactType contact);
+int list_all_contact_in_file(string fileName);
 contactType search_contact_in_file(string fileName, string name, string phone);
 int delete_contact_in_file(string fileName, string name, string phone);
+int edit_contact_in_file(string fileName, string name);
 
-contactType convert_vector_to_contact_type(vector<string> v)
+// Menu function
+bool verify_choice(char choice, vector<char> options)
+{
+    if (find(options.begin(), options.end(), choice) != options.end()) {
+        return true;
+    }
+    return false;
+}
+void print_menu(){
+    cout << "\e[1mMAIN MENU\e[0m" << endl;
+    cout << "==============================" << endl;
+    cout << "[1] Add a new contact" << endl;
+    cout << "[2] List all contacts" << endl;
+    cout << "[3] Search for contact" << endl;
+    cout << "[4] Edit a contact" << endl;
+    cout << "[5] Delete a contact" << endl;
+    cout << "==============================" << endl;
+}
+void start_menu()
+{
+    print_menu();
+    bool ok = false;
+    while(!ok) {
+        cout << "Enter the choice: ";
+        char choice;
+        vector<char> options = { '1', '2', '3', '4' };
+        cin >> choice;
+        if (verify_choice(choice, options)) {
+            cout << "Right choice" << endl;
+            ok = true;
+        } else {
+            cout << "Wrong choice" << endl;
+            ok = false;
+        }
+    }
+}
+
+// Some small function
+contactType convert_vector_to_contact_type(vector<string> v);
+string convert_vector_to_string(vector<string> v);
+string convert_contact_type_to_string(contactType contact);
+
+string data[6][4] = {{"My heo", "01216760247", "giftchanh@gmail.com", "1 Che Lan Vien, Taiwan"},
+                     {"Minh Duc", "0777117497", "laminhduc0704@gmail.com", "1 Che Lan Vien, Vietnam"},
+                     {"Gift", "01212760422", "lequyhamy@gmail.com", "1 Che Lan Vien, HCM"},
+                     {"Mon", "01146560247", "giftchanh123@gmail.com", "1 Che Lan Vien, Da Nang"},
+                     {"Mon heu", "02144567247", "hamylequy123@gmail.com", "1 Che Lan Vien, Da Lat"},
+                     {"My heo", "01216760247", "giftchanh@gmail.com", "1 Che Lan Vien, Taiwan"}};
+
+int main()
 {
     contactType contact;
+    cout << "************ Init" << endl;
+    for(int i = 0; i < 6; i++) {
+        contact.name = data[i][0];
+        contact.phone = data[i][1];
+        contact.email = data[i][2];
+        contact.address = data[i][3];
+        add_new_contact_to_file(contactFileName, contact);
+    }
 
-    contact.name = v[0];
-    contact.phone = v[1];
-    contact.email = v[2];
-    contact.address = v[3];
-    return contact;
-}
+    cout << "************ List all contact" << endl;
+    list_all_contact_in_file(contactFileName);
 
-string convert_contact_type_to_string(contactType contact)
-{
-    stringstream result;
+    cout << "************ Search contact in file" << endl;
+    cout << convert_contact_type_to_string(search_contact_in_file(contactFileName, "My heo", "01216760247")) << endl;
 
-    result << "Name: " << setw(20) << left << contact.name;
-    result << "Phone: " << setw(15) << left << contact.phone;
-    result << "Email: " << setw(30) << left << contact.email;
-    result << "Address: " << setw(50) << left << contact.address;
-    return result.str();
-}
+    cout << "************ Delete contact in file" << endl;
+    delete_contact_in_file(contactFileName, "My heo", "01216760247");
+    list_all_contact_in_file(contactFileName);
 
-string convert_vector_to_string(vector<string> v)
-{
-    return convert_contact_type_to_string(convert_vector_to_contact_type(v));
+    cout << "************ Edit contact in file" << endl;
+    /* edit_contact_in_file(contactFileName, "Mon heu"); */
+    /* list_all_contact_in_file(contactFileName); */
+    start_menu();
+
+    return 0;
 }
 
 int add_new_contact_to_file(string fileName, contactType contact)
@@ -57,12 +119,12 @@ int add_new_contact_to_file(string fileName, contactType contact)
     if(contactFound.name != "") {
         cout << "There is already this contact in file" << endl;
         cout << convert_contact_type_to_string(contactFound) << endl;
-        return 1;
+        return CONTACT_EXISTED;
     }
 
     if(contact.name == "") {
         cout << "Contact name must not be empty" << endl;
-        return 2;
+        return INVALID_INPUT;
     }
 
     fstream contactFile(contactFileName, ios::app);
@@ -73,7 +135,7 @@ int add_new_contact_to_file(string fileName, contactType contact)
         contactFile << contact.address << "\n";
     }
     contactFile.close();
-    return 0;
+    return OK;
 }
 
 int list_all_contact_in_file(string fileName)
@@ -94,7 +156,7 @@ int list_all_contact_in_file(string fileName)
         }
     }
     contactFile.close();
-    return 0;
+    return OK;
 }
 
 contactType search_contact_in_file(string fileName, string name, string phone)
@@ -128,22 +190,23 @@ int edit_contact_in_file(string fileName, string name)
     contactFound = search_contact_in_file(fileName, name, "");
     if(contactFound.name == "") {
         cout << "No number matches your contact" << endl;
+        return CONTACT_NOT_FOUND;
     } else {
         cout << "Found contact" << endl;
         cout << convert_contact_type_to_string(contactFound) << endl;
         cout << "Do you want to edit this contact [y/n]: ";
-        char answer; 
+        char answer;
         cin >> answer;
-        if (answer == 'y') {
+        if(answer == 'y') {
             delete_contact_in_file(fileName, contactFound.name, "");
             contactType newContact = contactFound;
             cout << "Please enter new information" << endl;
             cout << "Phone: ";
-            cin >> newContact.phone; 
-            add_new_contact_to_file(fileName, newContact);
+            cin >> newContact.phone;
+            return add_new_contact_to_file(fileName, newContact);
         }
     }
-    return 0;
+    return OK;
 }
 
 int delete_contact_in_file(string fileName, string name, string phone)
@@ -173,42 +236,33 @@ int delete_contact_in_file(string fileName, string name, string phone)
     contactFile.close();
     remove(contactFileName.c_str());
     rename(tempFileName.c_str(), contactFileName.c_str());
-    return 0;
+    return OK;
 }
 
-string data[6][4] = {{"My heo", "01216760247", "giftchanh@gmail.com", "1 Che Lan Vien, Taiwan"},
-                     {"Minh Duc", "0777117497", "laminhduc0704@gmail.com", "1 Che Lan Vien, Vietnam"},
-                     {"Gift", "01212760422", "lequyhamy@gmail.com", "1 Che Lan Vien, HCM"},
-                     {"Mon", "01146560247", "giftchanh123@gmail.com", "1 Che Lan Vien, Da Nang"},
-                     {"Mon heu", "02144567247", "hamylequy123@gmail.com", "1 Che Lan Vien, Da Lat"},
-                     {"My heo", "01216760247", "giftchanh@gmail.com", "1 Che Lan Vien, Taiwan"}};
-
-int main()
+// Smal functions
+contactType convert_vector_to_contact_type(vector<string> v)
 {
     contactType contact;
-    cout << "************ Add some contact to file" << endl;
-    for(int i = 0; i < 6; i++) {
-        contact.name = data[i][0];
-        contact.phone = data[i][1];
-        contact.email = data[i][2];
-        contact.address = data[i][3];
-        add_new_contact_to_file(contactFileName, contact);
-    }
 
-    cout << "************ List all contact" << endl;
-    list_all_contact_in_file(contactFileName);
-
-    cout << "************ Search contact in file" << endl;
-    cout << convert_contact_type_to_string(search_contact_in_file(contactFileName, "My heo", "01216760247")) << endl;
-
-    cout << "************ Delete contact in file" << endl;
-    delete_contact_in_file(contactFileName, "My heo", "01216760247");
-    list_all_contact_in_file(contactFileName);
-
-    cout << "************ Edit contact in file" << endl;
-    edit_contact_in_file(contactFileName, "Mon heu");
-    list_all_contact_in_file(contactFileName);
-
-    return 0;
+    contact.name = v[0];
+    contact.phone = v[1];
+    contact.email = v[2];
+    contact.address = v[3];
+    return contact;
 }
 
+string convert_contact_type_to_string(contactType contact)
+{
+    stringstream result;
+
+    result << "Name: " << setw(20) << left << contact.name;
+    result << "Phone: " << setw(15) << left << contact.phone;
+    result << "Email: " << setw(30) << left << contact.email;
+    result << "Address: " << setw(50) << left << contact.address;
+    return result.str();
+}
+
+string convert_vector_to_string(vector<string> v)
+{
+    return convert_contact_type_to_string(convert_vector_to_contact_type(v));
+}
