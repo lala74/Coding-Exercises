@@ -51,8 +51,8 @@ string convert_vector_to_string(vector<string> v);
 string convert_contact_type_to_string(contactType contact);
 
 // Edit function
-std::ostream& bold_on(std::ostream& os);
-std::ostream& bold_off(std::ostream& os);
+ostream& bold_on(ostream& os);
+ostream& bold_off(ostream& os);
 void clean_stdin(void);
 void wait_for_enter();
 void clear_screen();
@@ -232,7 +232,7 @@ returnType list_all_contact_in_file(string fileName)
     if(contactFile.good()) {
         while(getline(contactFile, lineRaw)) {
             wordsInLine.clear();
-            std::stringstream lineStringStream(lineRaw);
+            stringstream lineStringStream(lineRaw);
             while(getline(lineStringStream, word, separator)) {
                 wordsInLine.push_back(word);
             }
@@ -255,7 +255,7 @@ contactType search_contact_in_file(string fileName, string name, string phone)
     if(contactFile.good()) {
         while(getline(contactFile, lineRaw)) {
             wordsInLine.clear();
-            std::stringstream lineStringStream(lineRaw);
+            stringstream lineStringStream(lineRaw);
             while(getline(lineStringStream, word, separator)) {
                 wordsInLine.push_back(word);
             }
@@ -343,7 +343,7 @@ returnType delete_contact_in_file(string fileName, string name, bool silent)
         if(contactFile.good()) {
             while(getline(contactFile, lineRaw)) {
                 wordsInLine.clear();
-                std::stringstream lineStringStream(lineRaw);
+                stringstream lineStringStream(lineRaw);
                 while(getline(lineStringStream, word, separator)) {
                     wordsInLine.push_back(word);
                 }
@@ -416,12 +416,12 @@ string convert_vector_to_string(vector<string> v)
 /*****************************************************/
 /* Some edit functions */
 /*****************************************************/
-std::ostream& bold_on(std::ostream& os)
+ostream& bold_on(ostream& os)
 {
     return os << "\e[1m";
 }
 
-std::ostream& bold_off(std::ostream& os)
+ostream& bold_off(ostream& os)
 {
     return os << "\e[0m";
 }
