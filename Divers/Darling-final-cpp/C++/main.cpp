@@ -29,7 +29,15 @@ enum returnType {
     CONTACT_NOT_EDITED = 5,
 };
 
-// Main function
+// Menu functions
+void start_menu();
+void menu_add_new_contact();
+void menu_list_all_contacts();
+void menu_search_for_contact();
+void menu_edit_contact();
+void menu_delete_contact();
+
+// Main functions
 returnType add_new_contact_to_file(string fileName, contactType contact);
 returnType list_all_contact_in_file(string fileName);
 contactType search_contact_in_file(string fileName, string name, string phone);
@@ -37,53 +45,85 @@ returnType delete_contact_in_file(string fileName, string name, string phone, bo
 returnType edit_contact_in_file(string fileName, string name);
 
 // Some small function
+char get_choice(string getChoiceString, vector<char> options);
 contactType convert_vector_to_contact_type(vector<string> v);
 string convert_vector_to_string(vector<string> v);
 string convert_contact_type_to_string(contactType contact);
 
 // Edit function
-std::ostream& bold_on(std::ostream& os)
-{
-    return os << "\e[1m";
-}
+std::ostream& bold_on(std::ostream& os);
+std::ostream& bold_off(std::ostream& os);
+void clean_stdin(void);
+void wait_for_enter();
+void clear_screen();
 
-std::ostream& bold_off(std::ostream& os)
-{
-    return os << "\e[0m";
-}
 
-void clean_stdin(void)
-{
-    int c;
-    do {
-        c = cin.get();
-    } while(c != '\n' && c != EOF);
-}
+string data[6][4] = {{"My heo", "01216760247", "giftchanh@gmail.com", "1 Che Lan Vien, Taiwan"},
+                     {"Minh Duc", "0777117497", "laminhduc0704@gmail.com", "1 Che Lan Vien, Vietnam"},
+                     {"Gift", "01212760422", "lequyhamy@gmail.com", "1 Che Lan Vien, HCM"},
+                     {"Mon", "01146560247", "giftchanh123@gmail.com", "1 Che Lan Vien, Da Nang"},
+                     {"Mon heu", "02144567247", "hamylequy123@gmail.com", "1 Che Lan Vien, Da Lat"},
+                     {"My heo", "01216760247", "giftchanh@gmail.com", "1 Che Lan Vien, Taiwan"}};
 
-// Menu function
-char get_choice(string getChoiceString, vector<char> options)
+int main()
 {
-    char choice;
-    bool ok = false;
-    while(!ok) {
-        cout << getChoiceString;
-        cin >> choice;
-        if(find(options.begin(), options.end(), choice) != options.end()) {
-            ok = true;
-        } else {
-            cout << "Wrong choice" << endl;
-            ok = false;
-        }
+    contactType contact;
+    cout << "************ Init" << endl;
+    for(int i = 0; i < 6; i++) {
+        contact.name = data[i][0];
+        contact.phone = data[i][1];
+        contact.email = data[i][2];
+        contact.address = data[i][3];
+        add_new_contact_to_file(contactFileName, contact);
     }
-    clean_stdin();
-    return choice;
+
+    while(1) {
+        start_menu();
+    }
+    return 0;
 }
 
-void wait_for_enter()
+/*****************************************************/
+/* Menu functions */
+/*****************************************************/
+void start_menu()
 {
-    cout << '\n';
-    cout << "Press Enter to continue" << endl;
-    cin.get();
+    cout << string(3, '\n');
+    cout << bold_on << "MAIN MENU" << bold_off << endl;
+    cout << "==============================" << endl;
+    cout << "[1] Add a new contact" << endl;
+    cout << "[2] List all contacts" << endl;
+    cout << "[3] Search for contact" << endl;
+    cout << "[4] Edit a contact" << endl;
+    cout << "[5] Delete a contact" << endl;
+    cout << "[q] Quit" << endl;
+    cout << "==============================" << endl;
+
+    bool ok = false;
+    vector<char> options = {'1', '2', '3', '4', '5', 'q'};
+    char choice;
+
+    choice = get_choice("Enter the choice: ", options);
+
+    if(choice == '1') {
+        clear_screen();
+        menu_add_new_contact();
+    } else if(choice == '2') {
+        clear_screen();
+        menu_list_all_contacts();
+    } else if(choice == '3') {
+        clear_screen();
+        menu_search_for_contact();
+    } else if(choice == '4') {
+        clear_screen();
+        menu_edit_contact();
+    } else if(choice == '5') {
+        clear_screen();
+        menu_delete_contact();
+    } else if(choice == 'q') {
+        cout << "Exit !!" << endl;
+        exit(0);
+    }
 }
 
 void menu_add_new_contact()
@@ -177,76 +217,9 @@ void menu_delete_contact()
     wait_for_enter();
 }
 
-void clear_screen()
-{
-    cout << string(20, '\n');
-}
-
-void start_menu()
-{
-    cout << string(3, '\n');
-    cout << bold_on << "MAIN MENU" << bold_off << endl;
-    cout << "==============================" << endl;
-    cout << "[1] Add a new contact" << endl;
-    cout << "[2] List all contacts" << endl;
-    cout << "[3] Search for contact" << endl;
-    cout << "[4] Edit a contact" << endl;
-    cout << "[5] Delete a contact" << endl;
-    cout << "[q] Quit" << endl;
-    cout << "==============================" << endl;
-
-    bool ok = false;
-    vector<char> options = {'1', '2', '3', '4', '5', 'q'};
-    char choice;
-
-    choice = get_choice("Enter the choice: ", options);
-
-    if(choice == '1') {
-        clear_screen();
-        menu_add_new_contact();
-    } else if(choice == '2') {
-        clear_screen();
-        menu_list_all_contacts();
-    } else if(choice == '3') {
-        clear_screen();
-        menu_search_for_contact();
-    } else if(choice == '4') {
-        clear_screen();
-        menu_edit_contact();
-    } else if(choice == '5') {
-        clear_screen();
-        menu_delete_contact();
-    } else if(choice == 'q') {
-        cout << "Exit !!" << endl;
-        exit(0);
-    }
-}
-
-string data[6][4] = {{"My heo", "01216760247", "giftchanh@gmail.com", "1 Che Lan Vien, Taiwan"},
-                     {"Minh Duc", "0777117497", "laminhduc0704@gmail.com", "1 Che Lan Vien, Vietnam"},
-                     {"Gift", "01212760422", "lequyhamy@gmail.com", "1 Che Lan Vien, HCM"},
-                     {"Mon", "01146560247", "giftchanh123@gmail.com", "1 Che Lan Vien, Da Nang"},
-                     {"Mon heu", "02144567247", "hamylequy123@gmail.com", "1 Che Lan Vien, Da Lat"},
-                     {"My heo", "01216760247", "giftchanh@gmail.com", "1 Che Lan Vien, Taiwan"}};
-
-int main()
-{
-    contactType contact;
-    cout << "************ Init" << endl;
-    for(int i = 0; i < 6; i++) {
-        contact.name = data[i][0];
-        contact.phone = data[i][1];
-        contact.email = data[i][2];
-        contact.address = data[i][3];
-        add_new_contact_to_file(contactFileName, contact);
-    }
-
-    while(1) {
-        start_menu();
-    }
-    return 0;
-}
-
+/*****************************************************/
+/* Main functions */
+/*****************************************************/
 returnType add_new_contact_to_file(string fileName, contactType contact)
 {
     contactType contactFound;
@@ -414,7 +387,27 @@ returnType delete_contact_in_file(string fileName, string name, string phone, bo
     return OK;
 }
 
-// Smal functions
+/*****************************************************/
+/* Small functions */
+/*****************************************************/
+char get_choice(string getChoiceString, vector<char> options)
+{
+    char choice;
+    bool ok = false;
+    while(!ok) {
+        cout << getChoiceString;
+        cin >> choice;
+        if(find(options.begin(), options.end(), choice) != options.end()) {
+            ok = true;
+        } else {
+            cout << "Wrong choice" << endl;
+            ok = false;
+        }
+    }
+    clean_stdin();
+    return choice;
+}
+
 contactType convert_vector_to_contact_type(vector<string> v)
 {
     contactType contact;
@@ -442,3 +435,37 @@ string convert_vector_to_string(vector<string> v)
 {
     return convert_contact_type_to_string(convert_vector_to_contact_type(v));
 }
+
+/*****************************************************/
+/* Some edit functions */
+/*****************************************************/
+std::ostream& bold_on(std::ostream& os)
+{
+    return os << "\e[1m";
+}
+
+std::ostream& bold_off(std::ostream& os)
+{
+    return os << "\e[0m";
+}
+
+void clean_stdin(void)
+{
+    int c;
+    do {
+        c = cin.get();
+    } while(c != '\n' && c != EOF);
+}
+
+void wait_for_enter()
+{
+    cout << '\n';
+    cout << "Press Enter to continue" << endl;
+    cin.get();
+}
+
+void clear_screen()
+{
+    cout << string(20, '\n');
+}
+
