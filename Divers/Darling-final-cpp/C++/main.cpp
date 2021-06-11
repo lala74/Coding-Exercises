@@ -385,6 +385,18 @@ returnType delete_contact_in_file(string fileName, string name, string phone, bo
                 wordsInLine.push_back(word);
             }
             if((wordsInLine[0] == name) || (wordsInLine[1] == phone)) {
+                char choice;
+                if(silent) {
+                    choice = 'y';
+                } else {
+                    cout << '\n';
+                    cout << bold_on << "Found contact" << bold_off << endl;
+                    cout << "------------------------------" << endl;
+                    cout << convert_vector_to_string(wordsInLine) << endl;
+
+                    vector<char> options = {'y', 'n'};
+                    choice = get_choice("Do you want to delete this contact [y/n]: ", options);
+                }
 
                 if(choice == 'y') {
                     continue;
