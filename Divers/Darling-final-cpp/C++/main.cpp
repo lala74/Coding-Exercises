@@ -324,7 +324,7 @@ returnType edit_contact_in_file(string fileName, string name)
     contactType contactFound;
     contactFound = search_contact_in_file(fileName, name, "");
     if(contactFound.name == "") {
-        cout << "No contact matches your name" << endl;
+        cout << "No contact matches your require !!" << endl;
         return CONTACT_NOT_FOUND;
     }
 
@@ -370,48 +370,47 @@ returnType delete_contact_in_file(string fileName, string name, string phone, bo
         return CONTACT_NOT_FOUND;
     }
 
-    const string tempFileName = "temp.csv";
-    fstream tempFile(tempFileName, ios::out);
-    fstream contactFile(contactFileName, ios::in);
+    char choice;
+    if(silent) {
+        choice = 'y';
+    } else {
+        cout << '\n';
+        cout << bold_on << "Found contact" << bold_off << endl;
+        cout << "------------------------------" << endl;
+        cout << convert_contact_type_to_string(contactFound) << endl;
 
-    string lineRaw, word;
-    vector<string> wordsInLine;
+        choice = get_choice("Do you want to delete this contact [y/n]: ", {'y', 'n'});
+    }
 
-    if(contactFile.good()) {
-        while(getline(contactFile, lineRaw)) {
-            wordsInLine.clear();
-            std::stringstream lineStringStream(lineRaw);
-            while(getline(lineStringStream, word, separator)) {
-                wordsInLine.push_back(word);
-            }
-            if((wordsInLine[0] == name) || (wordsInLine[1] == phone)) {
-                char choice;
-                if(silent) {
-                    choice = 'y';
-                } else {
-                    cout << '\n';
-                    cout << bold_on << "Found contact" << bold_off << endl;
-                    cout << "------------------------------" << endl;
-                    cout << convert_vector_to_string(wordsInLine) << endl;
+    if(choice == 'y') {
+        const string tempFileName = "temp.csv";
+        fstream tempFile(tempFileName, ios::out);
+        fstream contactFile(contactFileName, ios::in);
 
-                    vector<char> options = {'y', 'n'};
-                    choice = get_choice("Do you want to delete this contact [y/n]: ", options);
+        string lineRaw, word;
+        vector<string> wordsInLine;
+
+        if(contactFile.good()) {
+            while(getline(contactFile, lineRaw)) {
+                wordsInLine.clear();
+                std::stringstream lineStringStream(lineRaw);
+                while(getline(lineStringStream, word, separator)) {
+                    wordsInLine.push_back(word);
                 }
-
-                if(choice == 'y') {
+                if((wordsInLine[0] == name) || (wordsInLine[1] == phone)) {
                     continue;
                 } else {
-                    return CONTACT_NOT_DELETED;
+                    tempFile << lineRaw << '\n';
                 }
-            } else {
-                tempFile << lineRaw << '\n';
             }
         }
+        tempFile.close();
+        contactFile.close();
+        remove(contactFileName.c_str());
+        rename(tempFileName.c_str(), contactFileName.c_str());
+    } else {
+        return CONTACT_NOT_DELETED;
     }
-    tempFile.close();
-    contactFile.close();
-    remove(contactFileName.c_str());
-    rename(tempFileName.c_str(), contactFileName.c_str());
     return OK;
 }
 
@@ -419,7 +418,8 @@ returnType delete_contact_in_file(string fileName, string name, string phone, bo
 contactType convert_vector_to_contact_type(vector<string> v)
 {
     contactType contact;
-
+    v.resize(4);
+    
     contact.name = v[0];
     contact.phone = v[1];
     contact.email = v[2];
