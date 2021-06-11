@@ -81,11 +81,8 @@ void start_menu()
     cout << "[q] Quit" << endl;
     cout << "==============================" << endl;
 
-    bool ok = false;
-    vector<char> options = {'1', '2', '3', '4', '5', 'q'};
     char choice;
-
-    choice = get_choice("Enter the choice: ", options);
+    choice = get_choice("Enter the choice: ", {'1', '2', '3', '4', '5', 'q'});
 
     if(choice == '1') {
         clear_screen();
@@ -357,6 +354,7 @@ returnType delete_contact_in_file(string fileName, string name, bool silent)
                 }
             }
         }
+
         tempFile.close();
         contactFile.close();
         remove(contactFileName.c_str());
@@ -373,16 +371,15 @@ returnType delete_contact_in_file(string fileName, string name, bool silent)
 char get_choice(string getChoiceString, vector<char> options)
 {
     char choice;
-    bool ok = false;
-    while(!ok) {
+    while(true) {
         cout << getChoiceString;
         cin >> choice;
         if(find(options.begin(), options.end(), choice) != options.end()) {
-            ok = true;
+            break;
         } else {
             cout << "Wrong choice" << endl;
-            ok = false;
         }
+        clean_stdin();
     }
     clean_stdin();
     return choice;
@@ -392,7 +389,7 @@ contactType convert_vector_to_contact_type(vector<string> v)
 {
     contactType contact;
     v.resize(4);
-    
+
     contact.name = v[0];
     contact.phone = v[1];
     contact.email = v[2];
