@@ -36,7 +36,7 @@ void menu_list_all_contacts();
 void menu_search_for_contact();
 void menu_edit_contact();
 void menu_delete_contact();
-void menu_clean_contact_list(); 
+void menu_clean_contact_list();
 
 // Main functions
 returnType add_new_contact_to_file(string fileName, contactType contact);
@@ -44,14 +44,14 @@ returnType list_all_contact_in_file(string fileName);
 contactType search_contact_in_file(string fileName, string name, string phone);
 returnType delete_contact_in_file(string fileName, string name, bool silent);
 returnType edit_contact_in_file(string fileName, string name);
-returnType clean_contact_in_file(string fileName, uint *contactDeletedNumber);
+returnType clean_contact_in_file(string fileName, uint* contactDeletedNumber);
 
 // Some small function
 char get_choice(string getChoiceString, vector<char> options);
 contactType convert_vector_to_contact_type(vector<string> v);
 string convert_vector_to_string(vector<string> v);
 string convert_contact_type_to_string(contactType contact);
-bool is_vector_has_empty_element(vector<string> v); 
+bool is_vector_has_empty_element(vector<string> v);
 
 // Edit function
 ostream& bold_on(ostream& os);
@@ -201,10 +201,11 @@ void menu_delete_contact()
     wait_for_enter();
 }
 
-void menu_clean_contact_list() {
+void menu_clean_contact_list()
+{
     uint contactDeletedNumber = 0;
 
-    if (clean_contact_in_file(contactFileName, &contactDeletedNumber) == OK) {
+    if(clean_contact_in_file(contactFileName, &contactDeletedNumber) == OK) {
         cout << bold_on << "CONTACT AFTER CLEAN" << bold_off << endl;
         cout << "------------------------------" << endl;
         list_all_contact_in_file(contactFileName);
@@ -213,7 +214,7 @@ void menu_clean_contact_list() {
     } else {
         cout << "Contact can not clean, strange error" << endl;
     }
-    
+
     wait_for_enter();
 }
 
@@ -334,7 +335,7 @@ returnType edit_contact_in_file(string fileName, string name)
     return OK;
 }
 
-returnType clean_contact_in_file(string fileName, uint *contactDeletedNumber)
+returnType clean_contact_in_file(string fileName, uint* contactDeletedNumber)
 {
     const string tempFileName = "temp.csv";
     fstream tempFile(tempFileName, ios::out);
@@ -463,10 +464,11 @@ string convert_contact_type_to_string(contactType contact)
     return result.str();
 }
 
-bool is_vector_has_empty_element(vector<string> v) {
+bool is_vector_has_empty_element(vector<string> v)
+{
     v.resize(4);
-    for (int i = 0; i < v.size(); i++) {
-        if (v[i] == "") {
+    for(int i = 0; i < v.size(); i++) {
+        if(v[i] == "") {
             return true;
         }
     }
