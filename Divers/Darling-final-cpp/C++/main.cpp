@@ -37,6 +37,8 @@ void menu_search_for_contact();
 void menu_edit_contact();
 void menu_delete_contact();
 
+
+
 // Main functions
 returnType add_new_contact_to_file(string fileName, contactType contact);
 returnType list_all_contact_in_file(string fileName);
@@ -56,6 +58,64 @@ ostream& bold_off(ostream& os);
 void clean_stdin(void);
 void wait_for_enter();
 void clear_screen();
+
+bool is_vector_has_empty_element(vector<string> v) {
+    v.resize(4);
+    for (int i = 0; i < v.size(); i++) {
+        if (v[i] == "") {
+            return true;
+        }
+    }
+    return false;
+}
+
+returnType clean_contact_in_file(string fileName, uint *contactDeletedNumber)
+{
+    const string tempFileName = "temp.csv";
+    fstream tempFile(tempFileName, ios::out);
+    fstream contactFile(contactFileName, ios::in);
+
+    string lineRaw, word;
+    vector<string> wordsInLine;
+
+    if(contactFile.good()) {
+        while(getline(contactFile, lineRaw)) {
+            wordsInLine.clear();
+            stringstream lineStringStream(lineRaw);
+            while(getline(lineStringStream, word, separator)) {
+                wordsInLine.push_back(word);
+            }
+            if(is_vector_has_empty_element(wordsInLine)) {
+                ++(*contactDeletedNumber);
+                continue;
+            } else {
+                tempFile << lineRaw << '\n';
+            }
+        }
+    }
+
+    tempFile.close();
+    contactFile.close();
+    remove(contactFileName.c_str());
+    rename(tempFileName.c_str(), contactFileName.c_str());
+    return OK;
+}
+
+void menu_clean_contact_list() {
+    uint contactDeletedNumber = 0;
+
+    if (clean_contact_in_file(contactFileName, &contactDeletedNumber) == OK) {
+        cout << bold_on << "CONTACT AFTER CLEAN" << bold_off << endl;
+        cout << "------------------------------" << endl;
+        list_all_contact_in_file(contactFileName);
+        cout << "------------------------------" << endl;
+        cout << "Delete " << bold_on << contactDeletedNumber << bold_off << " empty contact(s)" << endl;
+    } else {
+        cout << "Contact can not clean, strange error" << endl;
+    }
+    
+    wait_for_enter();
+}
 
 int main()
 {
@@ -78,11 +138,12 @@ void start_menu()
     cout << "[3] Search for contact" << endl;
     cout << "[4] Edit a contact" << endl;
     cout << "[5] Delete a contact" << endl;
+    cout << "[6] Clean contact list" << endl;
     cout << "[q] Quit" << endl;
     cout << "==============================" << endl;
 
     char choice;
-    choice = get_choice("Enter the choice: ", {'1', '2', '3', '4', '5', 'q'});
+    choice = get_choice("Enter the choice: ", {'1', '2', '3', '4', '5', '6', 'q'});
 
     if(choice == '1') {
         clear_screen();
@@ -99,6 +160,9 @@ void start_menu()
     } else if(choice == '5') {
         clear_screen();
         menu_delete_contact();
+    } else if(choice == '6') {
+        clear_screen();
+        menu_clean_contact_list();
     } else if(choice == 'q') {
         cout << "Exit !!" << endl;
         exit(0);
