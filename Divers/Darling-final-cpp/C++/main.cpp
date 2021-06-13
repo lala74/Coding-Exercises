@@ -71,6 +71,9 @@ int main()
 /*****************************************************/
 /* Menu functions */
 /*****************************************************/
+/*
+ * Print all contact list's feature and execute the user's choice
+ */
 void start_menu()
 {
     cout << string(3, '\n');
@@ -81,7 +84,7 @@ void start_menu()
     cout << "[3] Search for contact" << endl;
     cout << "[4] Edit a contact" << endl;
     cout << "[5] Delete a contact" << endl;
-    cout << "[6] Clean contact list" << endl;
+    cout << "[6] Clean contact list (deleted all contacts with at least one empty field)" << endl;
     cout << "[q] Quit" << endl;
     cout << "==============================" << endl;
 
@@ -112,6 +115,10 @@ void start_menu()
     }
 }
 
+/*
+ * Get all necessary inputs from user like name, phone, email, address and call add_new_contact_to_file function
+ * Check the return to see whether the contact is added succesfullyt
+ */
 void menu_add_new_contact()
 {
     contactType contact;
@@ -135,6 +142,9 @@ void menu_add_new_contact()
     wait_for_enter();
 }
 
+/*
+ * Print the necessary text and call list_all_contact_in_file function
+ */
 void menu_list_all_contacts()
 {
     cout << bold_on << "CONTACT LIST" << bold_off << endl;
@@ -143,6 +153,10 @@ void menu_list_all_contacts()
     wait_for_enter();
 }
 
+/*
+ * Get search name or phone from user and call search_contact_in_file function
+ * Check the return and print out contact if found
+ */
 void menu_search_for_contact()
 {
     string name, phone;
@@ -166,6 +180,10 @@ void menu_search_for_contact()
     wait_for_enter();
 }
 
+/*
+ * Get edit name from user and call edit_contact_in_file function
+ * Check the return to see whether the contact is edited
+ */
 void menu_edit_contact()
 {
     string name;
@@ -183,11 +201,15 @@ void menu_edit_contact()
     wait_for_enter();
 }
 
+/*
+ * Get delete name from user and call delete_contact_in_file function
+ * Check the return to see whether the contact is deleted
+ */
 void menu_delete_contact()
 {
     string name, phone;
 
-    cout << "Type name or phone number to delete" << endl;
+    cout << "Type name to delete" << endl;
     cout << "Press leave empty [Enter] if a field does not important" << endl;
     cout << "Please type name: ";
     getline(cin, name);
@@ -201,6 +223,11 @@ void menu_delete_contact()
     wait_for_enter();
 }
 
+/*
+ * Print out all the necessary text
+ * Print the contact after clean (remove all contact with at least one empty field)
+ * Print number of deleted contact
+ */
 void menu_clean_contact_list()
 {
     uint contactDeletedNumber = 0;
@@ -221,6 +248,10 @@ void menu_clean_contact_list()
 /*****************************************************/
 /* Main functions */
 /*****************************************************/
+/*
+ * Search contact list to see whether this contact is already existed (base on name)
+ * If not, add this contact to file
+ */
 returnType add_new_contact_to_file(string fileName, contactType contact)
 {
     contactType contactFound;
@@ -247,6 +278,9 @@ returnType add_new_contact_to_file(string fileName, contactType contact)
     return OK;
 }
 
+/*
+ * Print out all the contact in file
+ */
 returnType list_all_contact_in_file(string fileName)
 {
     fstream contactFile(contactFileName, ios::in);
@@ -254,13 +288,15 @@ returnType list_all_contact_in_file(string fileName)
     vector<string> wordsInLine;
 
     if(contactFile.good()) {
-        while(getline(contactFile, lineRaw)) {
-            wordsInLine.clear();
+        // If the contact file is ok
+        while(getline(contactFile, lineRaw)) {  // read line in contact file
+            wordsInLine.clear();                // remove the previous contact elements
             stringstream lineStringStream(lineRaw);
-            while(getline(lineStringStream, word, separator)) {
-                wordsInLine.push_back(word);
+            while(getline(
+                lineStringStream, word, separator)) {  // separate all field in a line by a separator and loop to store field to string variable
+                wordsInLine.push_back(word);           // store all field to a string vector
             }
-            cout << convert_vector_to_string(wordsInLine);
+            cout << convert_vector_to_string(wordsInLine);  // convert this vector to a more readable string name:xxx   phone:xxx ...
             cout << '\n';
         }
     }
@@ -268,6 +304,10 @@ returnType list_all_contact_in_file(string fileName)
     return OK;
 }
 
+/*
+ * Read all line of file to search for contact
+ * The process is like list_all_contact_in_file
+ */
 contactType search_contact_in_file(string fileName, string name, string phone)
 {
     fstream contactFile(contactFileName, ios::in);
@@ -283,19 +323,23 @@ contactType search_contact_in_file(string fileName, string name, string phone)
             while(getline(lineStringStream, word, separator)) {
                 wordsInLine.push_back(word);
             }
-            if((wordsInLine[0] == name) || (wordsInLine[1] == phone)) {
+            if((wordsInLine[0] == name) || (wordsInLine[1] == phone)) {  // Check if this contact matches user expectation
                 contactFound = convert_vector_to_contact_type(wordsInLine);
                 break;
             }
         }
     }
     contactFile.close();
-    return contactFound;
+    return contactFound;  // if contact not found, this variable's fields are null
 }
 
+/*
+ * Edit a contact in file by delete it and add editted contact to file
+ */
 returnType edit_contact_in_file(string fileName, string name)
 {
     contactType contactFound;
+    // Search to see whether this contact is existed
     contactFound = search_contact_in_file(fileName, name, "NULL");
     if(contactFound.name == "") {
         cout << "No contact matches your require !!" << endl;
@@ -308,17 +352,18 @@ returnType edit_contact_in_file(string fileName, string name)
     cout << convert_contact_type_to_string(contactFound) << endl;
 
     char choice;
-    choice = get_choice("Do you want to edit this contact [y/n]: ", {'y', 'n'});
+    choice = get_choice("Do you want to edit this contact [y/n]: ", {'y', 'n'});  // Confirm that user want to edit this contact
     if(choice == 'y') {
+        // Delete this contact
         delete_contact_in_file(fileName, contactFound.name, true);
 
-        contactType newContact = contactFound;
+        contactType newContact = contactFound;  // store the deleted contact
         string user_input;
         cout << "\nPlease enter new information" << endl;
         cout << "Press leave empty [Enter] if a field does not important" << endl;
         cout << "Phone: ";
         getline(cin, user_input);
-        if(user_input != "") newContact.phone = user_input;
+        if(user_input != "") newContact.phone = user_input;  // if a field is empty, it means user doesn't want to change that field
 
         cout << "Email: ";
         getline(cin, user_input);
@@ -367,6 +412,12 @@ returnType clean_contact_in_file(string fileName, uint* contactDeletedNumber)
     return OK;
 }
 
+/*
+ * Delete a contact in file by read and store all the contact in contact list except that contact
+ * Then save all the read contact to a new file
+ * Delete the old contact list file
+ * Change the new file name to the same as the old one
+ */
 returnType delete_contact_in_file(string fileName, string name, bool silent)
 {
     contactType contactFound;
@@ -403,18 +454,18 @@ returnType delete_contact_in_file(string fileName, string name, bool silent)
                 while(getline(lineStringStream, word, separator)) {
                     wordsInLine.push_back(word);
                 }
-                if(wordsInLine[0] == name) {
-                    continue;
+                if(wordsInLine[0] == name) { // Check whether this contact is the delete contact 
+                    continue;  // found the delete contact, skip is
                 } else {
-                    tempFile << lineRaw << '\n';
+                    tempFile << lineRaw << '\n';  // If not, save the contact to new file
                 }
             }
         }
 
         tempFile.close();
         contactFile.close();
-        remove(contactFileName.c_str());
-        rename(tempFileName.c_str(), contactFileName.c_str());
+        remove(contactFileName.c_str()); // Remove the old contact list
+        rename(tempFileName.c_str(), contactFileName.c_str()); // Change new contact name to the same as the old one
     } else {
         return CONTACT_NOT_DELETED;
     }
@@ -424,6 +475,10 @@ returnType delete_contact_in_file(string fileName, string name, bool silent)
 /*****************************************************/
 /* Small functions */
 /*****************************************************/
+/*
+ * Get user choice with expectation value
+ * If user choice is out of the options, we will keep getting input until user choice is one of the expectation value
+ */
 char get_choice(string getChoiceString, vector<char> options)
 {
     char choice;
@@ -453,6 +508,9 @@ contactType convert_vector_to_contact_type(vector<string> v)
     return contact;
 }
 
+/*
+ * Contact vector to readable string with field
+ */
 string convert_contact_type_to_string(contactType contact)
 {
     stringstream result;
