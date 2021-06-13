@@ -37,6 +37,8 @@ void menu_search_for_contact();
 void menu_edit_contact();
 void menu_delete_contact();
 void menu_clean_contact_list();
+void menu_delete_all_contact();
+void menu_display_file_info();
 
 // Main functions
 returnType add_new_contact_to_file(string fileName, contactType contact);
@@ -45,6 +47,8 @@ contactType search_contact_in_file(string fileName, string name, string phone);
 returnType delete_contact_in_file(string fileName, string name, bool silent);
 returnType edit_contact_in_file(string fileName, string name);
 returnType clean_contact_in_file(string fileName, uint* contactDeletedNumber);
+returnType delete_all_contact_in_file(string fileName);
+int get_line_number_of_file(string fileName);
 
 // Some small function
 char get_choice(string getChoiceString, vector<char> options);
@@ -77,6 +81,7 @@ int main()
 void start_menu()
 {
     cout << string(3, '\n');
+    cout << "** Welcome to Contact Management System **" << endl;
     cout << bold_on << "MAIN MENU" << bold_off << endl;
     cout << "==============================" << endl;
     cout << "[1] Add a new contact" << endl;
@@ -84,12 +89,14 @@ void start_menu()
     cout << "[3] Search for contact" << endl;
     cout << "[4] Edit a contact" << endl;
     cout << "[5] Delete a contact" << endl;
-    cout << "[6] Clean contact list (deleted all contacts with at least one empty field)" << endl;
+    cout << "[6] Display general information" << endl;
+    cout << "[7] Clean contact list (deleted all contacts with at least one empty field)" << endl;
+    cout << "[8] Delete all contacts" << endl;
     cout << "[q] Quit" << endl;
     cout << "==============================" << endl;
 
     char choice;
-    choice = get_choice("Enter the choice: ", {'1', '2', '3', '4', '5', '6', 'q'});
+    choice = get_choice("Enter the choice: ", {'1', '2', '3', '4', '5', '6', '7', '8', 'q'});
 
     if(choice == '1') {
         clear_screen();
@@ -108,7 +115,13 @@ void start_menu()
         menu_delete_contact();
     } else if(choice == '6') {
         clear_screen();
+        menu_display_file_info();
+    } else if(choice == '7') {
+        clear_screen();
         menu_clean_contact_list();
+    } else if(choice == '8') {
+        clear_screen();
+        menu_delete_all_contact();
     } else if(choice == 'q') {
         cout << "Exit !!" << endl;
         exit(0);
@@ -160,13 +173,19 @@ void menu_list_all_contacts()
 void menu_search_for_contact()
 {
     string name, phone;
+    char choice;
 
-    cout << "Type name or phone number to search" << endl;
-    cout << "Press leave empty [Enter] if a field does not important" << endl;
-    cout << "Please type name: ";
-    getline(cin, name);
-    cout << "Please type phone: ";
-    getline(cin, phone);
+    cout << "Do you to search by name or by phone number?" << endl;
+    cout << "Type 1 if you want to search by name." << endl;
+    cout << "Type 2 if you want to search by phone number" << endl;
+    choice = get_choice("Enter your choice: ", {'1', '2'});
+    if(choice == '1') {
+        cout << "Please type name: ";
+        getline(cin, name);
+    } else {
+        cout << "Please type phone: ";
+        getline(cin, phone);
+    }
 
     cout << '\n';
     contactType contactFound = search_contact_in_file(contactFileName, name, phone);
@@ -242,6 +261,21 @@ void menu_clean_contact_list()
         cout << "Contact can not clean, strange error" << endl;
     }
 
+    wait_for_enter();
+}
+
+void menu_delete_all_contact()
+{
+    if(delete_all_contact_in_file(contactFileName) == OK) {
+        cout << "All contacts deleted" << endl;
+    }
+    wait_for_enter();
+}
+
+void menu_display_file_info()
+{
+    int lineNumber = get_line_number_of_file(contactFileName);
+    cout << "Contact file has " << bold_on << lineNumber << bold_off << " contacts" << endl;
     wait_for_enter();
 }
 
@@ -361,6 +395,10 @@ returnType edit_contact_in_file(string fileName, string name)
         string user_input;
         cout << "\nPlease enter new information" << endl;
         cout << "Press leave empty [Enter] if a field does not important" << endl;
+        cout << "Name: ";
+        getline(cin, user_input);
+        if(user_input != "") newContact.name = user_input;  // if a field is empty, it means user doesn't want to change that field
+
         cout << "Phone: ";
         getline(cin, user_input);
         if(user_input != "") newContact.phone = user_input;  // if a field is empty, it means user doesn't want to change that field
@@ -412,6 +450,24 @@ returnType clean_contact_in_file(string fileName, uint* contactDeletedNumber)
     return OK;
 }
 
+returnType delete_all_contact_in_file(string fileName)
+{
+    remove(fileName.c_str());
+    ofstream newFile(fileName);
+    newFile.close();
+    return OK;
+}
+
+int get_line_number_of_file(string fileName)
+{
+    int count = 0;
+    string line;
+
+    ifstream file(fileName);
+    while(getline(file, line)) count++;
+    return count;
+}
+
 /*
  * Delete a contact in file by read and store all the contact in contact list except that contact
  * Then save all the read contact to a new file
@@ -454,8 +510,8 @@ returnType delete_contact_in_file(string fileName, string name, bool silent)
                 while(getline(lineStringStream, word, separator)) {
                     wordsInLine.push_back(word);
                 }
-                if(wordsInLine[0] == name) { // Check whether this contact is the delete contact 
-                    continue;  // found the delete contact, skip is
+                if(wordsInLine[0] == name) {  // Check whether this contact is the delete contact
+                    continue;                 // found the delete contact, skip is
                 } else {
                     tempFile << lineRaw << '\n';  // If not, save the contact to new file
                 }
@@ -464,8 +520,8 @@ returnType delete_contact_in_file(string fileName, string name, bool silent)
 
         tempFile.close();
         contactFile.close();
-        remove(contactFileName.c_str()); // Remove the old contact list
-        rename(tempFileName.c_str(), contactFileName.c_str()); // Change new contact name to the same as the old one
+        remove(contactFileName.c_str());                        // Remove the old contact list
+        rename(tempFileName.c_str(), contactFileName.c_str());  // Change new contact name to the same as the old one
     } else {
         return CONTACT_NOT_DELETED;
     }
@@ -568,6 +624,6 @@ void wait_for_enter()
 
 void clear_screen()
 {
-    cout << string(20, '\n');
+    cout << string(3, '\n');
 }
 
