@@ -82,12 +82,25 @@ function create_folder() {
         ;;
     esac
 
+    workingDirectory=${website}/${problemName}/${language}
+
     # Create directory tree
-    mkdir -p ${website}/${problemName}/${language}
+    mkdir -p ${workingDirectory}
     # Copy readme
     cp ${formatFolderName}/${readmeFormatFileName} ${website}/${problemName}/${readmeFileName}
     # Copy main
-    cp ${formatFolderName}/main${languageFileNameExtension} ${website}/${problemName}/${language}
+    cp ${formatFolderName}/main${languageFileNameExtension} ${workingDirectory}
+
+
+    if [ "${language}" == "C++" ]; then
+        mkdir -p ${workingDirectory}/build
+        cp ${formatFolderName}/CMakeLists.txt ${workingDirectory}
+        cd ${workingDirectory}/build
+        cmake ..
+        make
+        cd ..
+        ln -s build/compile_commands.json compile_commands.json
+    fi
 }
 
 #################################################
