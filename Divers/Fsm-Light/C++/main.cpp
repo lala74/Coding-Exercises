@@ -9,32 +9,31 @@
 #include <unordered_map>
 #include <vector>
 
+#include "Light.h"
+
 using namespace std;
 using namespace std::chrono;
-
-class Solution
-{
-public:
-    int solution() {
-        return 0;
-    }
-};
 
 int main(int argc, char** argv)
 {
     auto startTime = steady_clock::now();
 
     // Variables
-    int result;
+    Light light;
+    light.Toggle();
+    light.Toggle();
+    light.Toggle();
+    light.Toggle();
+    light.Toggle();
 
     // Input
 
     // Main
-    Solution solution;
-    result = solution.solution();
 
     // Output
-    cout << result << endl;
+    //
+    //
+    //
     // Runtime
     cout << "------------" << endl;
     auto finishTime = steady_clock::now();

@@ -38,6 +38,8 @@ include_directories(
 # Create sources variable which contains all source files
 set(SOURCES  
     main.cpp 
+    Light.h Light.cpp
+    LightState.h LightState.cpp
 )
 
 add_executable(${BASE_TARGET} ${SOURCES})

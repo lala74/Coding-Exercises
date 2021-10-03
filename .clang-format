@@ -7,10 +7,11 @@ AllowShortFunctionsOnASingleLine: Inline
 BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBraces: Linux
-ColumnLimit: 150
+ColumnLimit: 120
 IndentWidth: 4
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: Inner
 PointerAlignment: Left
 DerivePointerAlignment: false
-SpaceBeforeParens: Never
+SpaceBeforeParens: ControlStatements
+Cpp11BracedListStyle: false

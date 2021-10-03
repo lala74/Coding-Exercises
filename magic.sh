@@ -8,6 +8,7 @@
 languages=(
     "C"
     "C++"
+    "Go"
     "Python"
 )
 
@@ -76,6 +77,9 @@ function create_folder() {
         ;;
     "C++")
         languageFileNameExtension=".cpp"
+        ;;
+    "C++")
+        languageFileNameExtension=".go"
         ;;
     "Python")
         languageFileNameExtension=".py"
