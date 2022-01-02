@@ -31,6 +31,7 @@ set(BASE_TARGET main)
 # Bring header file into project
 include_directories(
     ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/../../../Common/C++
     # ${GLIB_INCLUDE_DIRS}
     # ${GIO_INCLUDE_DIRS}
 )

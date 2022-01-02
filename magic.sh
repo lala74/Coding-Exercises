@@ -102,8 +102,10 @@ function create_folder() {
         cd ${workingDirectory}/build
         cmake ..
         make
+        make run
         cd ..
         ln -s build/compile_commands.json compile_commands.json
+        cd ../../../
     fi
 }
 

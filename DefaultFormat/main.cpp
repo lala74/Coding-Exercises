@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "Duration.h"
+
 using namespace std;
 using namespace std::chrono;
 
@@ -22,7 +24,11 @@ public:
 
 int main(int argc, char** argv)
 {
-    auto startTime = steady_clock::now();
+    // Avoid warning
+    argc = 0;
+    argv = nullptr;
+    // Running time
+    Duration duration;
 
     // Variables
     int result;
@@ -35,11 +41,6 @@ int main(int argc, char** argv)
 
     // Output
     cout << result << endl;
-    // Runtime
-    cout << "------------" << endl;
-    auto finishTime = steady_clock::now();
-    auto runtime = finishTime - startTime;
-    cout << "Runtime: " << duration_cast<seconds>(runtime).count() << "ms" << endl;
     // Memory usage
     return 0;
 }
