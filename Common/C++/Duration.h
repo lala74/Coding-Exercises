@@ -17,7 +17,10 @@ using namespace std::chrono;
 class Duration
 {
 public:
-    Duration() { startTime = steady_clock::now(); }
+    Duration() { 
+        std::cout << "------ START ------" << std::endl;
+        startTime = steady_clock::now(); 
+    }
     ~Duration()
     {
         std::cout << "------ FINISH ------" << std::endl;
