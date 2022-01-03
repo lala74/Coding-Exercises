@@ -94,6 +94,7 @@ function create_folder() {
     cp ${formatFolderName}/${readmeFormatFileName} ${website}/${problemName}/${readmeFileName}
     # Copy main
     cp ${formatFolderName}/main${languageFileNameExtension} ${workingDirectory}
+    cp ${formatFolderName}/main_test${languageFileNameExtension} ${workingDirectory}
 
 
     if [ "${language}" == "C++" ]; then
@@ -101,8 +102,9 @@ function create_folder() {
         cp ${formatFolderName}/CMakeLists.txt ${workingDirectory}
         cd ${workingDirectory}/build
         cmake ..
-        make
+        make -j 8
         make run
+        ctest
         cd ..
         ln -s build/compile_commands.json compile_commands.json
         cd ../../../
