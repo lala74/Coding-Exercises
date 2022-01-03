@@ -14,95 +14,81 @@
 #include <cstdlib>
 #include <iostream>
 
-template <class T>
+template<class T>
 class Vector
 {
 public:
-    Vector();
-    ~Vector();
-    T& operator[](int i);
-    int Size() { return mSize; };
+    Vector() { reAllocate(2); };
+    ~Vector(){};
 
-    int PushBack(T value);
-    int PopBack();
-    int Clear();
+    T& operator[](size_t index)
+    {
+        if (index >= mSize) {
+            assert((index < mSize) && "Index out of bound");
+        }
+        return mData[index];
+    }
+
+    const T& operator[](size_t index) const
+    {
+        if (index >= mSize) {
+            assert((index < mSize) && "Index out of bound");
+        }
+        return mData[index];
+    };
+
+    size_t Size() { return mSize; }
+
+    void PushBack(const T& value)
+    {
+        if (mSize == mCap) {
+            reAllocate(mCap * 2);
+        }
+        mData[mSize] = value;
+        ++mSize;
+    }
+
+    void PopBack()
+    {
+        if (mSize == 0) {
+            std::cout << "Empty container" << std::endl;
+            return;
+        }
+        mData[mSize - 1].~T();
+        --mSize;
+    }
+
+    int Clear()
+    {
+        mSize = 0;
+        mCap = 0;
+        if (mData != nullptr) {
+            delete mData;
+            mData = nullptr;
+        }
+        return 0;
+    }
+
+private:
+    void reAllocate(int newCap)
+    {
+        mCap = newCap;
+        if (mSize > mCap) {
+            mSize = mCap;
+        }
+        T* newData = new T[newCap];
+        for (size_t i = 0; i < mSize; ++i) {
+            newData[i] = mData[i];
+        }
+        delete[] mData;
+        mData = newData;
+    }
 
 private:
     T* mData = nullptr;
     size_t mSize = 0;
     size_t mCap = 0;
 };
-
-template <class T>
-Vector<T>::Vector() 
-{
-}
-
-template <class T>
-Vector<T>::~Vector()
-{
-    Clear();
-}
-
-template <class T>
-T& Vector<T>::operator[](int index)
-{
-    if (index >= mSize) {
-        assert((index < mSize) && "Index out of bound");
-    }
-    return mData[index];
-}
-
-template <class T>
-int Vector<T>::PushBack(T value)
-{
-    if (mCap == 0) {
-        mCap = 1;
-    }
-    if (mSize + 1 > mCap) {
-        mCap *= 2;
-    }
-
-    auto newData = new T[mCap];
-    for (int i = 0; i < mSize; i++) {
-        newData[i] = mData[i];
-    }
-    newData[mSize] = value;
-    if (mData != nullptr) {
-        delete mData;
-    }
-    mData = newData;
-    ++mSize;
-
-    return 0;
-}
-
-template <class T>
-int Vector<T>::PopBack()
-{
-    if (mSize == 0) {
-        std::cout << "Empty container" << std::endl;
-        return 0;
-    }
-    if (mSize == 1) {
-        Clear();
-        return 0;
-    }
-    --mSize;
-    return 0;
-}
-
-template <class T>
-int Vector<T>::Clear()
-{
-    mSize = 0;
-    mCap = 0;
-    if (mData != nullptr) {
-        delete mData;
-        mData = nullptr;
-    }
-    return 0;
-}
 
 #endif /* VECTOR_H */
 

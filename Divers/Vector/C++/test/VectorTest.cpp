@@ -48,6 +48,5 @@ TEST_F(VectorTest, PopBack)
         vector.PopBack();
     }
     ASSERT_EQ(vector.Size(), 0);
-    ASSERT_EQ(vector.PopBack(), 0);
 }
 
