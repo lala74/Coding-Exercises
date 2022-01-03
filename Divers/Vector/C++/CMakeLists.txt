@@ -76,4 +76,3 @@ set(TEST_SOURCES
 add_executable(${TEST_TARGET} ${TEST_SOURCES})
 target_link_libraries(${TEST_TARGET} gtest gtest_main)
 gtest_discover_tests(${TEST_TARGET})
-# add_test(NAME main_test COMMAND ${TEST_TARGET})

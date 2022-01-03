@@ -6,13 +6,15 @@
 using namespace ::testing;
 using namespace std;
 
-const int limit = 1e1;
+const int limit = 1e4;
 
 class VectorTest : public ::testing::Test
 {
 protected:
     void SetUp() override;
     void TearDown() override;
+
+    Vector<int> vector;
 };
 
 void VectorTest::SetUp() {}
@@ -21,18 +23,31 @@ void VectorTest::TearDown() {}
 
 TEST_F(VectorTest, PushBack)
 {
-    Vector<int> vector;
-    for (int i = 0; i < limit; i++) {
-        cout << "TEST :" << i << endl;
-        vector.PushBack(i);
+    for (int i = 0; i < 100; i++) {
+        vector.PushBack(i * 2);
     }
-    // ASSERT_EQ(vector[1], 1);
+    ASSERT_EQ(vector[30], 60);
 }
 
-// TEST_F(VectorTest, Pop)
-// {
-//     for (int i = 0; i < limit; i++) {
-//         vector.PushBack(i * 2);
-//     }
-//     ASSERT_EQ(vector[100], 200);
-// }
+TEST_F(VectorTest, PushBackBig)
+{
+    for (int i = 0; i < limit; i++) {
+        vector.PushBack(i * 2);
+    }
+    ASSERT_EQ(vector[100], 200);
+    vector.Clear();
+    ASSERT_EQ(vector.Size(), 0);
+}
+
+TEST_F(VectorTest, PopBack)
+{
+    for (int i = 0; i < 100; i++) {
+        vector.PushBack(i * 2);
+    }
+    for (int i = 0; i < 100; i++) {
+        vector.PopBack();
+    }
+    ASSERT_EQ(vector.Size(), 0);
+    ASSERT_EQ(vector.PopBack(), 0);
+}
+

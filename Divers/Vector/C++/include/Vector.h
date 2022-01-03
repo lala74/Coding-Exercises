@@ -28,13 +28,13 @@ public:
     int Clear();
 
 private:
-    T* mData;
-    int mSize = 0;
-    int mCap = 0;
+    T* mData = nullptr;
+    size_t mSize = 0;
+    size_t mCap = 0;
 };
 
 template <class T>
-Vector<T>::Vector()
+Vector<T>::Vector() 
 {
 }
 
@@ -62,7 +62,6 @@ int Vector<T>::PushBack(T value)
     if (mSize + 1 > mCap) {
         mCap *= 2;
     }
-    std::cout << "Cap:" << mCap << std::endl;
 
     auto newData = new T[mCap];
     for (int i = 0; i < mSize; i++) {
@@ -71,15 +70,9 @@ int Vector<T>::PushBack(T value)
     newData[mSize] = value;
     if (mData != nullptr) {
         delete mData;
-        mData = nullptr;
     }
     mData = newData;
-    newData = nullptr;
     ++mSize;
-    for (int j = 0; j < mSize; j++) {
-        std::cout << mData[j] << " ";
-    }
-    std::cout << std::endl;
 
     return 0;
 }
