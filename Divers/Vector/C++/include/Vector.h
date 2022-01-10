@@ -39,12 +39,12 @@ public:
 
     size_t Size() { return mSize; }
 
-    void PushBack(const T& value)
+    void PushBack(T&& value)
     {
         if (mSize == mCap) {
             reAllocate(mCap * 2);
         }
-        mData[mSize] = value;
+        mData[mSize] = std::move(value);
         ++mSize;
     }
 
@@ -78,7 +78,7 @@ private:
         }
         T* newData = new T[newCap];
         for (size_t i = 0; i < mSize; ++i) {
-            newData[i] = mData[i];
+            newData[i] = std::move(mData[i]);
         }
         delete[] mData;
         mData = newData;
