@@ -78,7 +78,7 @@ function create_folder() {
     "C++")
         languageFileNameExtension=".cpp"
         ;;
-    "C++")
+    "Go")
         languageFileNameExtension=".go"
         ;;
     "Python")
@@ -94,10 +94,9 @@ function create_folder() {
     cp ${formatFolderName}/${readmeFormatFileName} ${website}/${problemName}/${readmeFileName}
     # Copy main
     cp ${formatFolderName}/main${languageFileNameExtension} ${workingDirectory}
-    cp ${formatFolderName}/main_test${languageFileNameExtension} ${workingDirectory}
-
 
     if [ "${language}" == "C++" ]; then
+        cp ${formatFolderName}/main_test${languageFileNameExtension} ${workingDirectory}
         mkdir -p ${workingDirectory}/build
         cp ${formatFolderName}/CMakeLists.txt ${workingDirectory}
         cd ${workingDirectory}/build
@@ -108,6 +107,16 @@ function create_folder() {
         cd ..
         ln -s build/compile_commands.json compile_commands.json
         cd ../../../
+        return 0
+    fi
+
+    if [ "${language}" == "Go" ]; then
+        cd ${workingDirectory}
+        rm go.mod go.sum
+        go mod init ${problemName}
+        go mod tidy
+        cd ../../../
+        return 0
     fi
 }
 
