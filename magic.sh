@@ -16,6 +16,7 @@ websites=(
     "Kattis"
     "Divers"
     "LeetCode"
+    "Exercism"
 )
 
 red="\e[41m"
