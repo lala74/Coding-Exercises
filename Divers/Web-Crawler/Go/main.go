@@ -37,10 +37,15 @@ func Crawl(url string, depth int, fetcher Fetcher) {
 	statusMap := &StatusMap{
 		m: make(map[string]bool),
 	}
-	crawl(url, depth, fetcher, statusMap)
+	wg := &sync.WaitGroup{}
+	wg.Add(1)
+	go crawl(url, depth, fetcher, statusMap, wg)
+	wg.Wait()
 }
 
-func crawl(url string, depth int, fetcher Fetcher, status *StatusMap) {
+func crawl(url string, depth int, fetcher Fetcher, status *StatusMap, wg *sync.WaitGroup) {
+	defer wg.Done()
+
 	if depth <= 0 {
 		return
 	}
@@ -56,16 +61,10 @@ func crawl(url string, depth int, fetcher Fetcher, status *StatusMap) {
 	status.SetFetched(url)
 	fmt.Printf("found: %s %q\n", url, body)
 
-	wg := sync.WaitGroup{}
 	for _, url := range urls {
 		wg.Add(1)
-		go func(url string) {
-			defer wg.Done()
-			crawl(url, depth-1, fetcher, status)
-		}(url)
+		go crawl(url, depth-1, fetcher, status, wg)
 	}
-	wg.Wait()
-
 	return
 }
 
