@@ -2,8 +2,28 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"time"
 )
+
+type StatusMap struct {
+	m  map[string]bool
+	mu sync.RWMutex
+}
+
+func (s *StatusMap) SetFetched(url string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.m[url] = true
+}
+
+func (s *StatusMap) IsFetched(url string) bool {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	return s.m[url]
+}
 
 type Fetcher interface {
 	// Fetch returns the body of URL and
@@ -14,21 +34,38 @@ type Fetcher interface {
 // Crawl uses fetcher to recursively crawl
 // pages starting with url, to a maximum of depth.
 func Crawl(url string, depth int, fetcher Fetcher) {
-	// TODO: Fetch URLs in parallel.
-	// TODO: Don't fetch the same URL twice.
-	// This implementation doesn't do either:
+	statusMap := &StatusMap{
+		m: make(map[string]bool),
+	}
+	crawl(url, depth, fetcher, statusMap)
+}
+
+func crawl(url string, depth int, fetcher Fetcher, status *StatusMap) {
 	if depth <= 0 {
 		return
 	}
+	if status.IsFetched(url) {
+		return
+	}
+
 	body, urls, err := fetcher.Fetch(url)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	status.SetFetched(url)
 	fmt.Printf("found: %s %q\n", url, body)
-	for _, u := range urls {
-		Crawl(u, depth-1, fetcher)
+
+	wg := sync.WaitGroup{}
+	for _, url := range urls {
+		wg.Add(1)
+		go func(url string) {
+			defer wg.Done()
+			crawl(url, depth-1, fetcher, status)
+		}(url)
 	}
+	wg.Wait()
+
 	return
 }
 
