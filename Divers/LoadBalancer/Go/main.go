@@ -65,6 +65,9 @@ func (b *Balancer) balance() {
 	for {
 		select {
 		case r := <-b.requestsStream: // incoming requests
+			// create a go routine to dispatch request to worker
+			// because if send to much request to worker, dispatch func will block
+			// because worker is working, can not receive another request -> balancer block
 			go b.dispatch(r)
 		case w := <-b.doneStream: // worker inform done
 			b.complete(w)
