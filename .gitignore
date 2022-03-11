@@ -1,3 +1,6 @@
+.undordir/
+Session.vim
+
 ###############################################
 # Project
 .vscode
