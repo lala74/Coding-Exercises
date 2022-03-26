@@ -17,6 +17,7 @@ websites=(
     "Divers"
     "LeetCode"
     "Exercism"
+    "DesignPatterns"
 )
 
 red="\e[41m"
@@ -116,6 +117,21 @@ function create_folder() {
         rm go.mod go.sum
         go mod init ${problemName}
         go mod tidy
+        cd ../../../
+        return 0
+    fi
+
+    if [ "${language}" == "C" ]; then
+        cp ${formatFolderName}/main_test${languageFileNameExtension} ${workingDirectory}
+        mkdir -p ${workingDirectory}/build
+        cp ${formatFolderName}/C/CMakeLists.txt ${workingDirectory}
+        cd ${workingDirectory}/build
+        cmake ..
+        make -j 8
+        make run
+        ctest
+        cd ..
+        ln -s build/compile_commands.json compile_commands.json
         cd ../../../
         return 0
     fi
