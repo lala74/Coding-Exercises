@@ -3,6 +3,7 @@ package main
 import (
 	. "Queue-Stack/container"
 	"fmt"
+	"strconv"
 )
 
 type MyCircularQueue struct {
@@ -111,24 +112,25 @@ func openLock(deadends []string, target string) int {
 		return -1
 	}
 
-	q := Queue{}
+	q := NewQueue(10000)
 	visited := make(map[string]bool, 10000)
 
-	q.Push("0000")
+	q.EnQueue("0000")
 	visited["0000"] = true
 	count := 0
 
 	for q.Len() != 0 {
 		len := q.Len()
 		for i := 0; i < len; i++ {
-			c := q.Pop().(string)
+			c := q.Front().(string)
+			q.DeQueue()
 			coms := generateNextRotateCombinations(c)
 			// Add all possible rotations to queue
 			for _, com := range coms {
 				_, ok := visited[com]
 				if !ok && !isItemInSlice(com, deadends) {
 					visited[com] = true
-					q.Push(com)
+					q.EnQueue(com)
 				}
 			}
 			if c == target {
@@ -331,11 +333,43 @@ func dailyTemperatures(temperatures []int) []int {
 	return answer
 }
 
+// Evaluate Reverse Polish Notation
+func evalRPN(tokens []string) int {
+	s := NewStack(len(tokens))
+	for _, v := range tokens {
+		if v != "+" && v != "-" && v != "*" && v != "/" {
+			s.Push(v)
+			continue
+		}
+
+		value := 0
+		v2, _ := strconv.Atoi(s.Top().(string))
+		s.Pop()
+		v1, _ := strconv.Atoi(s.Top().(string))
+		s.Pop()
+
+		switch v {
+		case "+":
+			value = v1 + v2
+		case "-":
+			value = v1 - v2
+		case "*":
+			value = v1 * v2
+		case "/":
+			value = v1 / v2
+		}
+		s.Push(strconv.Itoa(value))
+	}
+	result, _ := strconv.Atoi(s.Top().(string))
+	return result
+}
+
 func main() {
-	// fmt.Println(openLock([]string{"0002"}, "0004"))
-	// fmt.Println(numSquares(7168))
-	// fmt.Println(isValid("()"))
-	fmt.Println(dailyTemperatures([]int{73, 74, 75, 71, 69, 72, 76, 73}))
+	// fmt.Println(openLock([]string{"0201", "0101", "0102", "1212", "2002"}, "0202")) // 6
+	// fmt.Println(numSquares(13)) // 2
+	// fmt.Println(isValid("()")) // true
+	// fmt.Println(dailyTemperatures([]int{73, 74, 75, 71, 69, 72, 76, 73})) // [1,1,4,2,1,1,0,0]
+	fmt.Println(evalRPN([]string{"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"})) // 22
 
 	// value := strconv.Itoa(65536 * 80 / 100)
 	// fmt.Println("Value", value)
