@@ -338,14 +338,15 @@ func evalRPN(tokens []string) int {
 	s := NewStack(len(tokens))
 	for _, v := range tokens {
 		if v != "+" && v != "-" && v != "*" && v != "/" {
-			s.Push(v)
+			val, _ := strconv.Atoi(v)
+			s.Push(val)
 			continue
 		}
 
 		value := 0
-		v2, _ := strconv.Atoi(s.Top().(string))
+		v2, _ := s.Top().(int)
 		s.Pop()
-		v1, _ := strconv.Atoi(s.Top().(string))
+		v1, _ := s.Top().(int)
 		s.Pop()
 
 		switch v {
@@ -358,10 +359,60 @@ func evalRPN(tokens []string) int {
 		case "/":
 			value = v1 / v2
 		}
-		s.Push(strconv.Itoa(value))
+		s.Push(value)
 	}
-	result, _ := strconv.Atoi(s.Top().(string))
-	return result
+	return s.Top().(int)
+}
+
+// Clone Graph
+type Node struct {
+	Val       int
+	Neighbors []*Node
+}
+
+func cloneGraph(node *Node) *Node {
+	if node == nil {
+		return nil
+	}
+	s := NewStack(0)
+	nodes := make(map[int]*Node)
+	visited := make(map[int]bool)
+
+	s.Push(node)
+
+	for !s.IsEmpty() {
+		n := s.Top().(*Node)
+		s.Pop()
+		if visited[n.Val] {
+			continue
+		}
+		// Not visited
+		visited[n.Val] = true
+		cloneNode := makeNodeIfNotInMap(n.Val, nodes)
+		for _, neighbor := range n.Neighbors {
+			s.Push(neighbor)
+			cloneNeighbor := makeNodeIfNotInMap(neighbor.Val, nodes)
+			cloneNode.Neighbors = append(cloneNode.Neighbors, cloneNeighbor)
+		}
+	}
+	return nodes[node.Val]
+}
+
+func makeNode(val int) *Node {
+	return &Node{
+		Val:       val,
+		Neighbors: make([]*Node, 0),
+	}
+}
+
+func makeNodeIfNotInMap(val int, nodes map[int]*Node) *Node {
+	node, ok := nodes[val]
+	// this node was not cloned yet, clone it and add it to nodes map
+	if !ok {
+		node = makeNode(val)
+		nodes[node.Val] = node
+	}
+	return node
 }
 
 func main() {
