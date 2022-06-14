@@ -1,4 +1,4 @@
-module github.com/lala74/Coding-Exercises/Common/Go/common
+module github.com/lala74/Coding-Exercises/Common/Go
 
 go 1.17
 
